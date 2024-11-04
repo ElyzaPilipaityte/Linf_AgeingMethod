@@ -1,0 +1,310 @@
+---
+title: "Untitled"
+author: "Elyza Pilipaityte"
+date: "2024-07-08"
+output: html_document
+---
+
+```{r}
+rm(list=ls())
+```
+
+Libraries
+```{r}
+library(tidyverse)
+library(lme4)
+library(sjPlot)
+library(dplyr)
+library(rfishbase)
+library(car)
+
+My_theme <- theme(
+  panel.background = element_blank(),
+  panel.border = element_rect(fill = NA, linewidth = 1.25),
+  strip.background = element_rect(fill = "white", color = "white", linewidth = 1.25),
+  text = element_text(size = 16, family = "gillsans"),
+  panel.grid.major = element_blank(),  # Remove major grid lines
+  panel.grid.minor = element_blank()   # Remove minor grid lines
+)
+```
+
+popgrowth tables
+
+```{r}
+# getting species names from fishbase
+fish <- species_names()
+species_list <- fish$Species
+# extracting available growth data for all species
+spp_data <- popgrowth(species_list)
+# number of species
+length(unique(spp_data$Species))
+
+# selecting only necessary variables and excluding doubtful estimates
+data <- spp_data %>% select(Species, method = Data, TLinfinity, K, Auxim, Sex, Type, Loo) %>% filter(Auxim != "doubtful")
+
+# any missing aging method
+colSums(is.na(data))
+# removing missing aging method
+data <- data %>% drop_na(method)
+
+# aging methods
+table(data$method)
+# renaming aging methods
+data$method <- ifelse(data$method %in% c("annuli on few otoliths", "annuli on many otoliths", "annuli on otoliths", "daily otolith rings", "otoliths"), "otoliths",
+ifelse(data$method %in% c("others", "several data types", "other annual rings", "various data types"), "others",
+ifelse(data$method %in% c("scale annual rings", "scales", "scale"), "scales",
+ifelse(data$method %in% c("Lmax Lm tm", "Lmax tmax", "length-frequencies"), "growth",
+ifelse(data$method %in% c("direct observation", "tagging/recapture"), "direct_observ",
+data$method)))))
+
+# filtering only scale or otolith method
+data <- data %>% filter(method == "scales" | method == "otoliths")
+length(unique(data$Species))
+
+# Filter species that have both "scales" and "otoliths" aging methods
+species_with_both_methods <- data %>%
+  group_by(Species) %>%
+  summarise(has_scales = "scales" %in% method,
+            has_otoliths = "otoliths" %in% method) %>%
+  filter(has_scales & has_otoliths) %>%
+  pull(Species)
+
+# Filter the original data to include only species with both methods and exclude doubtful estimations of Linf
+data_filtered <- data %>% filter(Species %in% species_with_both_methods) %>% filter(method == "otoliths" | method == "scales")
+
+```
+
+Table to see how many observations in each method for different species
+
+```{r}
+# Group by species and method, then count the number of observations
+method_counts <- data_filtered %>%
+  group_by(Species, method) %>%
+  summarise(count = n(), .groups = 'drop')
+
+# Create a table with species names as rows and methods as columns
+method_counts_table <- method_counts %>%
+  pivot_wider(names_from = method, values_from = count, values_fill = 0)
+```
+
+Many species have only one estimation for one of the methods, I filter the species which have more than 4 estimates using each method.
+
+```{r}
+# Filter species that have more than 4 Linf counts using both methods
+filtered_species <- data_filtered %>%
+  group_by(Species, method) %>%
+  summarise(count = n(), .groups = 'drop') %>%
+  pivot_wider(names_from = method, values_from = count, values_fill = 0) %>%
+  filter(scales > 4 & otoliths > 4) %>%
+  pull(Species)
+
+# Further filter the original data to include only species meeting the criteria
+data_filtered_final <- data_filtered %>%
+  filter(Species %in% filtered_species)
+
+table(data_filtered_final$Species)
+```
+
+year included in the csv file from FishBase references 
+
+```{r}
+data <- read_csv(file = "rfish_Linf_year.csv")
+```
+
+```{r}
+str(data)
+
+ggplot(data, aes(x = year, y = method, fill = method)) +
+  geom_boxplot() +
+  xlab("year") +
+  ylab("method") +
+  My_theme
+
+
+data <- data %>% filter(year > 1925)
+
+ggplot(data, aes(x = year, y = method, fill = method)) +
+  geom_boxplot() +
+  xlab("year") +
+  ylab("method") +
+  My_theme
+
+ggplot(data, aes(x = year, fill = method)) +
+  geom_bar(position = "dodge") +
+  xlab("Year") +
+  ylab("Count") +
+  scale_x_continuous(breaks = seq(min(data$year), max(data$year), by = 10)) +
+ My_theme
+
+
+data_summary <- data %>%
+  group_by(year, method) %>%
+  summarise(Frequency = n())
+
+ggplot(data_summary, aes(x = year, y = Frequency, color = method)) +
+  geom_point(size = 3, position = position_dodge(width = 0.2)) +
+  geom_smooth(method = "lm", se = FALSE, size = 1.5) +
+  xlab("Year") + ylab("Frequency of Linf Observations") +
+  My_theme + 
+geom_smooth(method = "lm", se = TRUE, size = 1.5)
+
+table(data$year)
+table(data$Locality)
+table(data$Sex)
+table(data$Species)
+
+ggplot(data, aes(x = as.factor(year), y = Loo, color = method)) +
+  geom_jitter(size = 2) +
+  My_theme +
+  facet_wrap(~ Species) +
+  scale_x_discrete(breaks = unique(data$year)[seq(1, length(unique(data$year)), by = 10)]) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+ggplot(data, aes(x = as.factor(year), y = Loo, color = method, shape = Type)) +
+  geom_jitter(size = 2) +
+  My_theme +
+  facet_wrap(~ Species) +
+  scale_x_discrete(breaks = unique(data$year)[seq(1, length(unique(data$year)), by = 10)]) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(shape = "Length Type")
+
+ggplot(data, aes(x = Species, y = Loo, fill = method)) +
+  geom_boxplot() +
+  theme_minimal() +
+  xlab("Species") +
+  ylab("Linf (cm)") +
+  scale_fill_manual(values = c("scales" = "#DDCC77", "otoliths" = "#6699CC")) +
+  theme(panel.background = element_rect(fill = "white"), 
+        axis.text = element_text(size = 14), 
+        axis.title = element_text(size = 16), 
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        axis.text.x = element_text(angle = 35, hjust = 1),
+        legend.text = element_text(size = 14),
+        legend.title = element_text(size = 14))
+```
+
+
+Data exploration 
+
+1. Outliers in response and independent variables
+
+```{r}
+ggplot(data = data) + 
+  geom_point(mapping = aes(x = Loo, y = Species, color=as.factor(method)), position = "jitter", size = 2.5)
+# no outliers
+```
+
+2. Normality and homogeneity of the response variable
+
+```{r}
+# Frequency plot
+
+hist(data$Loo,  xlab = "Length (cm)",
+     col = "lightblue", border = "black", main = "")
+
+```
+
+3. Balance of categorical variables
+
+```{r}
+table(data$Species)
+table(data$method)
+table(data$year)
+```
+
+4. Multicollinearity among covariates
+
+```{r}
+#Calculate Variance Inflation Factor (VIF)
+round(vif(lm(Loo ~ method + Species + year,
+                     data = data)),2)
+```
+
+5. Relationships among response and independent variables
+
+```{r}
+# Interaction? Plot data
+ggplot(data, aes(x = year, y = (Loo), color = Species)) +
+  geom_point(shape = 16, size = 2, alpha = 0.7, position = "jitter") +
+  geom_smooth(method = 'lm', colour = 'red', se = FALSE, size = 1.5) +
+  xlab("method") + ylab("Linf (cm)") +
+  facet_wrap(~method)
+
+ggplot(data, aes(x = year, y = (Linf_stand), color = Species)) +
+  geom_point(shape = 16, size = 2, alpha = 0.7, position = "jitter") +
+  geom_smooth(method = 'lm', colour = 'red', se = FALSE, size = 1.5) +
+  xlab("method") + ylab("Linf (cm)") +
+  facet_wrap(~method)
+
+
+
+ggplot(data, aes(x = method, y = (Loo), color = Species)) +
+  geom_point(shape = 16, size = 2, alpha = 0.7, position = "jitter") +
+  geom_smooth(method = 'lm', colour = 'red', se = FALSE, size = 1.5) +
+  xlab("method") + ylab("Linf (cm)")
+
+ggplot(data, aes(x = method, y = (Linf_stand), color = Species)) +
+  geom_point(shape = 16, size = 2, alpha = 0.7, position = "jitter") +
+  geom_smooth(method = 'lm', colour = 'red', se = FALSE, size = 1.5) +
+  xlab("method") + ylab("Linf (cm)")
+```
+
+
+Models
+
+```{r}
+m0 <- lm(Loo ~ method, data = data)
+m1 <- lmer(Loo ~ method + (1|Species), data = data, REML = F)
+m2 <- lmer(Loo ~ method + (1|Species) + (1|year), data = data, REML = F)
+anova(m1, m2)
+
+m3 <- lmer(Loo ~ method + (1|Species) + (1|year) + (1|Locality), data = data, REML = F)
+anova(m2, m3)
+
+m4 <- lmer(Linf_stand ~ method + (1|Species), data = data, REML = F)
+m5 <- lmer(Linf_stand ~ method + year + (1|Species), data = data, REML = F)
+anova(m4, m5)
+
+m6 <- lmer(Linf_stand ~ method + (1|Species) + (1|year), data = data, REML = F)
+m7 <- lmer(Linf_stand ~ method + (1|Species) + (1|year) + (1|Locality), data = data, REML = F)
+anova(m4, m6)
+anova(m7, m6)
+
+anova(m2, m6)
+```
+
+```{r}
+# Summarise neatly in a table
+tab_model(m1,
+          show.zeroinf = F,
+           string.pred = "Coefficient",
+             string.ci = "Conf. Int (95%)",
+              string.p = "P-value",
+               p.style = c("numeric"),
+                emph.p = FALSE,
+             transform = NULL)
+
+plot_model(m2)
+```
+
+Residuals
+
+```{r}
+# 1. Linearity & Homoscedasticity: Residuals vs Fitted plot
+plot(m1, which = 1)
+
+# 2. Normality of residuals: Q-Q plot of residuals
+qqnorm(residuals(m1))
+qqline(residuals(m1))
+
+# 3. Normality of random effects: Q-Q plot for random effects
+qqnorm(ranef(m1)$Species[,1])
+qqline(ranef(m1)$Species[,1])
+
+# 4. Variance of random effects (Species)
+summary(m1)$varcor
+
+hist((residuals(m1)), breaks = 30, main = "Histogram of Residuals")
+```
+

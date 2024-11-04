@@ -1,0 +1,568 @@
+---
+title: "vonB_CL"
+author: "Elyza Pilipaityte"
+date: "2024-10-21"
+output: html_document
+---
+
+```{r}
+
+rm(list=ls())
+
+```
+
+
+```{r}
+library(tidyverse)
+library(FSA)     # for vbFuns(), vbStarts(), headtail(), peek()
+library(dplyr)   # for filter(), mutate(), group_by()
+library(ggplot2)
+theme_set(theme_bw())
+library(investr)
+library(car)
+```
+
+
+## Perch
+
+Uploading data
+
+```{r}
+data2023 <- read_csv(file = "2023.csv")
+
+perch23otoliths <- data2023 %>% filter (spp_name_lt=="Eserys") %>% select(tl = total_length, age = age_Egle, sex_en) %>% drop_na(age)
+
+perch23otoliths <- perch23otoliths %>% mutate(method = "otoliths")
+
+perch23scales <- data2023 %>% filter (spp_name_lt=="Eserys") %>% select(tl = total_length, age = age_scales, sex_en) %>% drop_na(age) %>% mutate(method = "scales")
+
+perch <- rbind(perch23otoliths, perch23scales)
+
+perch$method <- as.factor(perch$method)
+```
+
+```{r}
+vb <- vbFuns(param="Typical")     ## Typical VBGF
+grps <- unique(perch$method)          ## Names of groups
+ngrps <- length(grps)             ## Number of groups
+obsagerng <- perch |>              ## Range of observed ages by group
+  group_by(method) |>
+  summarize(min=min(age),
+            max=max(age))
+sv0 <- vbStarts(tl~age,data=perch) ## Starting values ignoring groups
+```
+
+```{r}
+( svLKt <- data.frame(method=grps,
+                      Map(rep,sv0,c(ngrps,ngrps,ngrps))) )
+```
+
+```{r}
+vbLOOP1 <- function(grp,dat,svs,oagerng,eagerng,interval="confidence") {
+  ## Loop notification (for peace of mind)
+  cat(grp, "Loop\n")
+  ## Isolate group's data, starting values, and age range
+  dat1 <- dplyr::filter(dat,method==grp)
+  sv1 <- svs |>
+    filter(method==grp) |>
+    select(-method) |>
+    as.list()
+  oagerng1 <- filter(oagerng,method==grp)
+  ## Make ages for predictions
+  ages <- seq(min(eagerng),max(eagerng),length.out=101)
+  ## Fit von B to that group
+  fit1 <- nls(tl~vb(age,Linf,K,t0),data=dat1,start=sv1)
+  ## Extract the fitted parameters
+  fit_params <- summary(fit1)$coefficients
+  
+  ## Make data frame of predicted mean lengths at age with CIs
+  preds1 <- data.frame(method=grp,
+                       age=ages,
+                       fit=investr::predFit(fit1,data.frame(age=ages),
+                                            interval=interval)) |>
+    mutate(inrng=age>=oagerng1$min & age<=oagerng1$max) |>
+    as.data.frame()
+  ## Rename variables
+  names(preds1) <- c("method","age","fit","lwr","upr","inrng")
+  
+  ## Return both predictions and the fitted parameters
+  list(preds = preds1, params = fit_params)
+}
+
+```
+
+
+```{r}
+preds <- NULL
+params_list <- list()
+
+for (i in grps) {
+  result <- vbLOOP1(i, perch, svLKt, obsagerng, c(0, 20))
+  preds <- rbind(preds, result$preds)
+  params_list[[i]] <- result$params  # Store the parameters for each method
+}
+
+peek(preds)
+
+for (i in grps) {
+  cat("\nMethod:", i, "\n")
+  cat("Linf:", params_list[[i]]["Linf", "Estimate"], "\n")
+  cat("K:", params_list[[i]]["K", "Estimate"], "\n")
+}
+
+```
+
+```{r}
+vbFitPlot1 <- ggplot() +
+  geom_ribbon(data=preds, aes(x=age, ymin=lwr, ymax=upr, fill=method), alpha=0.25) +
+  geom_point(data=perch, aes(x=age, y=tl, color=method), size=2, alpha=0.3) +
+  geom_line(data=preds, aes(x=age, y=fit, color=method), linewidth=1, linetype="dashed") +
+  geom_line(data=filter(preds, inrng), aes(x=age, y=fit, color=method), linewidth=1) +
+  scale_y_continuous(name="Total Length (mm)", limits=c(0, 60)) +
+  scale_x_continuous(name="Age (years)", breaks=0:20) +
+  scale_color_manual(values=c('#404040', '#93003a'), aesthetics=c("color", "fill")) +
+  scale_y_continuous(name=element_blank(), limits=c(0, 70), expand=c(0, 0)) +
+  scale_x_continuous(name=element_blank(), expand=c(0, 0), limits=c(0, 20), breaks=seq(5, 15, 5)) +
+  theme_bw() +
+  theme(panel.grid=element_blank(),
+        legend.position=c(0.8, 0.2),
+        axis.title=element_text(size=16),
+        axis.text=element_text(size=15),
+        legend.text=element_text(size=15),
+        legend.title=element_text(size=15)) +
+
+  # Add annotations for Linf and K for the first method with standard errors
+  annotate("text", x=1, y=65, 
+           label=paste0("\nLinf = ", 
+                        round(params_list[[1]]["Linf", "Estimate"], 2), 
+                        " (SE ± ", round(params_list[[1]]["Linf", "Std. Error"], 2), ")\n",
+                        "K = ", round(params_list[[1]]["K", "Estimate"], 2), 
+                        " (SE ± ", round(params_list[[1]]["K", "Std. Error"], 2), ")"), 
+           color='#404040', size=5, hjust=0) +
+
+  # Add annotations for Linf and K for the second method with standard errors
+  annotate("text", x=1, y=55, 
+           label=paste0("\nLinf = ", 
+                        round(params_list[[2]]["Linf", "Estimate"], 2), 
+                        " (SE ± ", round(params_list[[2]]["Linf", "Std. Error"], 2), ")\n",
+                        "K = ", round(params_list[[2]]["K", "Estimate"], 2), 
+                        " (SE ± ", round(params_list[[2]]["K", "Std. Error"], 2), ")"), 
+           color='#93003a', size=5, hjust=0)
+
+# Print the plot
+print(vbFitPlot1)
+
+
+```
+
+
+## Pikeperch
+
+```{r}
+
+sander23otoliths <- data2023 %>% filter (spp_name_lt=="Starkis") %>% select(tl = total_length, age = age_Egle, sex_en) %>% drop_na(age)
+
+sander23otoliths <- sander23otoliths %>% mutate(method = "otoliths")
+
+sander23scales <- data2023 %>% filter (spp_name_lt=="Starkis") %>% select(tl = total_length, age = age_scales, sex_en) %>% drop_na(age) %>% mutate(method = "scales")
+
+sander <- rbind(sander23otoliths, sander23scales)
+```
+
+
+```{r}
+vb <- vbFuns()
+predict2 <- function(x) predict(x,data.frame(age=ages))
+
+agesum <- group_by(sander, method) %>%
+  summarize(minage=min(age),maxage=max(age))
+agesum
+
+sander$method <- as.factor(sander$method)
+( methods <- levels(sander$method) )
+( nmethods <- length(methods) )
+cfs <- cis <- preds1 <- preds2 <- NULL
+```
+
+```{r}
+for (i in 1:nmethods) {
+  ## Loop notification (for peace of mind)
+  cat(methods[i],"Loop\n")
+  tmp1 <- filter(sander,method==methods[i])
+  ## Fit von B to that methods
+  sv1 <- vbStarts(tl~age,data=tmp1)
+  fit1 <- nls(tl~vb(age,Linf,K,t0),data=tmp1,start=sv1)
+  ## Extract and store parameter estimates and CIs
+  cfs <- rbind(cfs,coef(fit1))
+  boot1 <- Boot(fit1)
+  tmp2 <-  confint(boot1)
+  cis <- rbind(cis,c(tmp2["Linf",],tmp2["K",],tmp2["t0",]))
+  ## Predict mean lengths-at-age with CIs
+  ##   preds1 -> across all ages
+  ##   preds2 -> across observed ages only
+  ages <- seq(-1,30,0.2)
+  boot2 <- Boot(fit1,f=predict2)
+  tmp2 <- data.frame(method=methods[i],age=ages,
+                     predict(fit1,data.frame(age=ages)),
+                     confint(boot2))
+  preds1 <- rbind(preds1,tmp2)
+  tmp2 <- filter(tmp2,age>=agesum$minage[i],age<=agesum$maxage[i])
+  preds2 <- rbind(preds2,tmp2)
+}
+```
+
+```{r}
+rownames(cfs) <- rownames(cis) <- methods
+colnames(cis) <- paste(rep(c("Linf","K","t0"),each=2),
+                       rep(c("LCI","UCI"),times=2),sep=".")
+colnames(preds1) <- colnames(preds2) <- c("method","age","fit","LCI","UCI")
+
+vbFitPlot2 <- ggplot() + 
+  geom_ribbon(data=preds2,aes(x=age,ymin=LCI,ymax=UCI,fill=method),alpha=0.2) +
+  geom_point(data=sander,aes(y=tl,x=age,color=method),alpha=0.25,size=2,
+             position=position_dodge(width=0.2)) +
+  geom_line(data=preds1,aes(y=fit,x=age,color=method),size=1,linetype=2) +
+  geom_line(data=preds2,aes(y=fit,x=age,color=method),size=1) +
+  scale_color_manual(values=c('#404040', '#93003a'),
+                     aesthetics=c("fill","color")) +
+  scale_y_continuous(name=element_blank(),limits=c(0,70),expand=c(0,0)) +
+  scale_x_continuous(name=element_blank(),expand=c(0,0),
+                     limits=c(0,11),breaks=seq(2,10,2)) +
+  theme_bw() +
+  theme(panel.grid=element_blank(),
+    legend.position = "none",
+    axis.title = element_text(size = 16),     # Adjust size of axis titles
+    axis.text = element_text(size = 15),      # Adjust size of axis values
+    legend.text = element_text(size = 15),
+    legend.title = element_text(size = 15)
+  ) # +
+  # annotate("text", x = 9, y = 55, label = "Linf = -435.33\nK = -0.02", color = '#404040', size = 5, hjust = 0) +
+  # annotate("text", x = 9, y = 40, label = "Linf = -185.47\nK = -0.03", color = '#93003a', size = 5, hjust = 0)
+
+vbFitPlot2
+```
+
+```{r}
+p.K <- ggplot() +
+  geom_point(data = cfs, aes(x = methods, y = K), size = 2.5, position = position_dodge(width = 0.2)) +
+  geom_errorbar(data = cis, aes(x = methods, ymin = K.LCI, ymax = K.UCI), size = 1, width = 0.1) +
+  scale_y_continuous(name = (name="K")) +
+  scale_x_discrete(name = "Method", breaks = methods) +
+  theme_bw() +
+  theme(panel.grid = element_blank(),
+        axis.title = element_text(size = 16),
+        axis.text = element_text(vjust = 0.5, size = 15),
+        legend.text = element_text(size = 15)) +  # Increase text size of legend labels
+  guides(color = guide_legend(title = NULL))  # Remove legend title only
+
+p.K
+
+```
+
+```{r}
+p.K <- ggplot() +
+  geom_point(data = cfs, aes(x = methods, y = Linf), size = 2.5, position = position_dodge(width = 0.2)) +
+  geom_errorbar(data = cis, aes(x = methods, ymin = Linf.LCI, ymax = Linf.UCI), size = 1, width = 0.1) +
+  scale_y_continuous(name = (name="Linf")) +
+  scale_x_discrete(name = "Method", breaks = methods) +
+  theme_bw() +
+  theme(panel.grid = element_blank(),
+        axis.title = element_text(size = 16),
+        axis.text = element_text(vjust = 0.5, size = 15),
+        legend.text = element_text(size = 15)) +  # Increase text size of legend labels
+  guides(color = guide_legend(title = NULL))  # Remove legend title only
+
+p.K
+
+```
+
+## Bream
+
+```{r}
+bream23otoliths <- data2023 %>% filter (spp_name_lt=="Karsis") %>% select(tl = total_length, age = age_Egle, sex_en) %>% drop_na(age)
+
+bream23otoliths <- bream23otoliths %>% mutate(method = "otoliths")
+
+bream23scales <- data2023 %>% filter (spp_name_lt=="Karsis") %>% select(tl = total_length, age = age_scales, sex_en) %>% drop_na(age) %>% mutate(method = "scales")
+
+bream <- rbind(bream23otoliths, bream23scales)
+
+```
+
+```{r}
+vb <- vbFuns(param="Typical")     ## Typical VBGF
+grps <- unique(bream$method)          ## Names of groups
+ngrps <- length(grps)             ## Number of groups
+obsagerng <- bream |>              ## Range of observed ages by group
+  group_by(method) |>
+  summarize(min=min(age),
+            max=max(age))
+sv0 <- vbStarts(tl~age,data=bream) ## Starting values ignoring groups
+```
+
+```{r}
+( svLKt <- data.frame(method=grps,
+                      Map(rep,sv0,c(ngrps,ngrps,ngrps))) )
+```
+
+
+```{r}
+vbLOOP1 <- function(grp,dat,svs,oagerng,eagerng,interval="confidence") {
+  ## Loop notification (for peace of mind)
+  cat(grp, "Loop\n")
+  ## Isolate group's data, starting values, and age range
+  dat1 <- dplyr::filter(dat,method==grp)
+  sv1 <- svs |>
+    filter(method==grp) |>
+    select(-method) |>
+    as.list()
+  oagerng1 <- filter(oagerng,method==grp)
+  ## Make ages for predictions
+  ages <- seq(min(eagerng),max(eagerng),length.out=101)
+  ## Fit von B to that group
+  fit1 <- nls(tl~vb(age,Linf,K,t0),data=dat1,start=sv1)
+  ## Extract the fitted parameters
+  fit_params <- summary(fit1)$coefficients
+  
+  ## Make data frame of predicted mean lengths at age with CIs
+  preds1 <- data.frame(method=grp,
+                       age=ages,
+                       fit=investr::predFit(fit1,data.frame(age=ages),
+                                            interval=interval)) |>
+    mutate(inrng=age>=oagerng1$min & age<=oagerng1$max) |>
+    as.data.frame()
+  ## Rename variables
+  names(preds1) <- c("method","age","fit","lwr","upr","inrng")
+  
+  ## Return both predictions and the fitted parameters
+  list(preds = preds1, params = fit_params)
+}
+
+```
+
+```{r}
+preds <- NULL
+params_list <- list()
+
+for (i in grps) {
+  result <- vbLOOP1(i, bream, svLKt, obsagerng, c(0, 20))
+  preds <- rbind(preds, result$preds)
+  params_list[[i]] <- result$params  # Store the parameters for each method
+}
+
+peek(preds)
+
+for (i in grps) {
+  cat("\nMethod:", i, "\n")
+  cat("Linf:", params_list[[i]]["Linf", "Estimate"], "\n")
+  cat("K:", params_list[[i]]["K", "Estimate"], "\n")
+}
+
+```
+
+```{r}
+vbFitPlot3 <- ggplot() +
+  geom_ribbon(data=preds, aes(x=age, ymin=lwr, ymax=upr, fill=method), alpha=0.25) +
+  geom_point(data=bream, aes(x=age, y=tl, color=method), size=2, alpha=0.3) +
+  geom_line(data=preds, aes(x=age, y=fit, color=method), linewidth=1, linetype="dashed") +
+  geom_line(data=filter(preds, inrng), aes(x=age, y=fit, color=method), linewidth=1) +
+  scale_y_continuous(name="Total Length (mm)", limits=c(0, 60)) +
+  scale_x_continuous(name="Age (years)", breaks=0:20) +
+  scale_color_manual(values=c('#404040', '#93003a'), aesthetics=c("color", "fill")) +
+  scale_y_continuous(name=element_blank(), limits=c(0, 70), expand=c(0, 0)) +
+  scale_x_continuous(name=element_blank(), expand=c(0, 0), limits=c(0, 20), breaks=seq(5, 15, 5)) +
+  theme_bw() +
+  theme(panel.grid=element_blank(),
+        legend.position="none",
+        axis.title=element_text(size=16),
+        axis.text=element_text(size=15),
+        legend.text=element_text(size=15),
+        legend.title=element_text(size=15)) +
+
+  # Add annotations for Linf and K for the first method with standard errors
+  annotate("text", x=1, y=65, 
+           label=paste0("\nLinf = ", 
+                        format(round(params_list[[1]]["Linf", "Estimate"], 2), nsmall = 2), 
+                        " (SE ± ", format(round(params_list[[1]]["Linf", "Std. Error"], 2), nsmall = 2), ")\n",
+                        "K = ", format(round(params_list[[1]]["K", "Estimate"], 2), nsmall = 2), 
+                        " (SE ± ", format(round(params_list[[1]]["K", "Std. Error"], 2), nsmall = 2), ")"), 
+           color='#404040', size=5, hjust=0) +
+
+  # Add annotations for Linf and K for the second method with standard errors
+  annotate("text", x=1, y=55, 
+           label=paste0("\nLinf = ", 
+                        format(round(params_list[[2]]["Linf", "Estimate"], 2), nsmall = 2), 
+                        " (SE ± ", format(round(params_list[[2]]["Linf", "Std. Error"], 2), nsmall = 2), ")\n",
+                        "K = ", format(round(params_list[[2]]["K", "Estimate"], 2), nsmall = 2), 
+                        " (SE ± ", format(round(params_list[[2]]["K", "Std. Error"], 2), nsmall = 2), ")"), 
+           color='#93003a', size=5, hjust=0)
+
+# Print the plot
+print(vbFitPlot3)
+
+```
+
+
+# Roach
+
+```{r}
+roach1 <- data2023 %>% filter (spp_name_lt=="Kuoja") %>% select(tl = total_length, age_ot = age_Egle, age_sc = age_scales, sex_en)
+
+roach23otoliths <- data2023 %>% filter (spp_name_lt=="Kuoja") %>% select(tl = total_length, age = age_Egle, sex_en) %>% drop_na(age)
+
+roach23otoliths <- roach23otoliths %>% mutate(method = "otoliths")
+
+roach23scales <- data2023 %>% filter (spp_name_lt=="Kuoja") %>% select(tl = total_length, age = age_scales, sex_en) %>% drop_na(age) %>% mutate(method = "scales")
+
+roach <- rbind(roach23otoliths, roach23scales)
+```
+
+```{r}
+vb <- vbFuns(param="Typical")     ## Typical VBGF
+grps <- unique(roach$method)          ## Names of groups
+ngrps <- length(grps)             ## Number of groups
+obsagerng <- roach |>              ## Range of observed ages by group
+  group_by(method) |>
+  summarize(min=min(age),
+            max=max(age))
+sv0 <- vbStarts(tl~age,data=roach) ## Starting values ignoring groups
+```
+
+```{r}
+( svLKt <- data.frame(method=grps,
+                      Map(rep,sv0,c(ngrps,ngrps,ngrps))) )
+```
+
+
+```{r}
+vbLOOP1 <- function(grp,dat,svs,oagerng,eagerng,interval="confidence") {
+  ## Loop notification (for peace of mind)
+  cat(grp, "Loop\n")
+  ## Isolate group's data, starting values, and age range
+  dat1 <- dplyr::filter(dat,method==grp)
+  sv1 <- svs |>
+    filter(method==grp) |>
+    select(-method) |>
+    as.list()
+  oagerng1 <- filter(oagerng,method==grp)
+  ## Make ages for predictions
+  ages <- seq(min(eagerng),max(eagerng),length.out=101)
+  ## Fit von B to that group
+  fit1 <- nls(tl~vb(age,Linf,K,t0),data=dat1,start=sv1)
+  ## Extract the fitted parameters
+  fit_params <- summary(fit1)$coefficients
+  
+  ## Make data frame of predicted mean lengths at age with CIs
+  preds1 <- data.frame(method=grp,
+                       age=ages,
+                       fit=investr::predFit(fit1,data.frame(age=ages),
+                                            interval=interval)) |>
+    mutate(inrng=age>=oagerng1$min & age<=oagerng1$max) |>
+    as.data.frame()
+  ## Rename variables
+  names(preds1) <- c("method","age","fit","lwr","upr","inrng")
+  
+  ## Return both predictions and the fitted parameters
+  list(preds = preds1, params = fit_params)
+}
+
+```
+
+```{r}
+preds <- NULL
+params_list <- list()
+
+for (i in grps) {
+  result <- vbLOOP1(i, roach, svLKt, obsagerng, c(0, 20))
+  preds <- rbind(preds, result$preds)
+  params_list[[i]] <- result$params  # Store the parameters for each method
+}
+
+peek(preds)
+
+for (i in grps) {
+  cat("\nMethod:", i, "\n")
+  cat("Linf:", params_list[[i]]["Linf", "Estimate"], "\n")
+  cat("K:", params_list[[i]]["K", "Estimate"], "\n")
+}
+
+```
+
+```{r}
+vbFitPlot4 <- ggplot() +
+  geom_ribbon(data=preds,aes(x=age,ymin=lwr,ymax=upr,fill=method),alpha=0.25) +
+  geom_point(data=roach,aes(x=age,y=tl,color=method),
+             size=2,alpha=0.3) +
+  geom_line(data=preds,aes(x=age,y=fit,color=method),
+              linewidth=1,linetype="dashed") +
+  geom_line(data=filter(preds,inrng),aes(x=age,y=fit,color=method),
+              linewidth=1) +
+  scale_y_continuous(name="Total Length (mm)",limits=c(0,60)) +
+  scale_x_continuous(name="Age (years)",breaks=0:20) +
+  scale_color_manual(values=c('#404040', '#93003a'),
+                     aesthetics=c("color","fill")) +
+  scale_y_continuous(name = element_blank(),limits=c(0,70),expand=c(0,0)) +
+  scale_x_continuous(name = element_blank(),expand=c(0,0),
+                     limits=c(0,20),breaks=seq(5,15,5)) +
+  theme_bw() +
+  theme(panel.grid=element_blank(),
+        legend.position = "none",
+        axis.title = element_text(size = 16),
+        axis.text = element_text(size = 15),
+        legend.text = element_text(size = 15),
+        legend.title = element_text(size = 15)) +
+
+  # Add annotations for Linf and K for the first method
+  annotate("text", x=1, y=65, label=paste0("\nLinf = ", 
+                                            format(round(params_list[[1]]["Linf", "Estimate"], 2), nsmall = 2),
+                                           " (SE ± ", format(round(params_list[[1]]["Linf", "Std. Error"], 2), nsmall = 2), ")\n",
+                                            "K = ", format(round(params_list[[1]]["K", "Estimate"], 2), nsmall = 2),
+           " (SE ± ", format(round(params_list[[1]]["K", "Std. Error"], 2), nsmall = 2), ")"), 
+           color='#404040', size=5, hjust=0)
+
+```
+
+
+
+# One plot
+
+```{r}
+
+library(ggplot2)
+library(gridExtra)
+library(grid)
+
+# Species names
+species_names <- c("Perca fluviatilis", "Sander lucioperca", "Abramis brama", "Rutilus rutilus")
+
+# Arrange the plots with titles
+combined_plot <- grid.arrange(
+  arrangeGrob(textGrob(species_names[1], gp = gpar(fontsize = 17, fontface = "italic")), vbFitPlot1, ncol = 1, heights = c(0.1, 1)),
+  arrangeGrob(textGrob(species_names[2], gp = gpar(fontsize = 17, fontface = "italic")), vbFitPlot2, ncol = 1, heights = c(0.1, 1)),
+  arrangeGrob(textGrob(species_names[3], gp = gpar(fontsize = 17, fontface = "italic")), vbFitPlot3, ncol = 1, heights = c(0.1, 1)),
+  arrangeGrob(textGrob(species_names[4], gp = gpar(fontsize = 17, fontface = "italic")), vbFitPlot4, ncol = 1, heights = c(0.1, 1)),
+  ncol = 2, nrow = 2
+)
+
+# Add common axis labels
+grid.arrange(combined_plot,
+             bottom = textGrob("Age (years)", gp = gpar(fontsize = 16)),
+             left = textGrob("Total Length (cm)", rot = 90, gp = gpar(fontsize = 16))
+)
+
+```
+
+
+```{r}
+# Create a TIFF file with specific resolution and dimensions
+svg("combined_plot.svg", width = 12, height = 10)
+
+# Draw the combined plot with common axis labels
+grid.arrange(combined_plot,
+             bottom = textGrob("Age (years)", gp = gpar(fontsize = 16)),
+             left = textGrob("Total Length (cm)", rot = 90, gp = gpar(fontsize = 16)))
+
+# Close the TIFF device
+dev.off()
+```
+
