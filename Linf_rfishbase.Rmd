@@ -40,7 +40,7 @@ spp_data <- popgrowth(species_list)
 length(unique(spp_data$Species))
 
 # selecting only necessary variables and excluding doubtful estimates
-data <- spp_data %>% select(Species, method = Data, TLinfinity, K, Auxim, Sex, Type, Loo) %>% filter(Auxim != "doubtful")
+data <- spp_data %>% select(Species, method = Data, TLinfinity, K, Auxim, Sex, Type, Loo, to) %>% filter(Auxim != "doubtful")
 
 # any missing aging method
 colSums(is.na(data))
@@ -219,6 +219,9 @@ table(data$year)
 #Calculate Variance Inflation Factor (VIF)
 round(vif(lm(Loo ~ method + Species + year,
                      data = data)),2)
+
+round(vif(lm(K ~ method + Species + year,
+                     data = data)),2)
 ```
 
 5. Relationships among response and independent variables
@@ -308,3 +311,46 @@ summary(m1)$varcor
 hist((residuals(m1)), breaks = 30, main = "Histogram of Residuals")
 ```
 
+K Model
+
+```{r}
+m0 <- lm(K ~ method, data = data)
+m1 <- lmer(K ~ method + (1|Species), data = data, REML = F)
+m2 <- lmer(K ~ method + (1|Species) + (1|year), data = data, REML = F)
+anova(m1, m2)
+
+```
+
+
+```{r}
+# Summarise neatly in a table
+tab_model(m1,
+          show.zeroinf = F,
+           string.pred = "Coefficient",
+             string.ci = "Conf. Int (95%)",
+              string.p = "P-value",
+               p.style = c("numeric"),
+                emph.p = FALSE,
+             transform = NULL)
+
+```
+
+Residuals
+
+```{r}
+# 1. Linearity & Homoscedasticity: Residuals vs Fitted plot
+plot(m1, which = 1)
+
+# 2. Normality of residuals: Q-Q plot of residuals
+qqnorm(residuals(m1))
+qqline(residuals(m1))
+
+# 3. Normality of random effects: Q-Q plot for random effects
+qqnorm(ranef(m1)$Species[,1])
+qqline(ranef(m1)$Species[,1])
+
+# 4. Variance of random effects (Species)
+summary(m1)$varcor
+
+hist((residuals(m1)), breaks = 30, main = "Histogram of Residuals")
+```
