@@ -14,7 +14,6 @@ Libraries
 library(tidyverse)
 library(lme4)
 library(sjPlot)
-library(dplyr)
 library(rfishbase)
 library(car)
 
@@ -105,7 +104,7 @@ data_filtered_final <- data_filtered %>%
 table(data_filtered_final$Species)
 ```
 
-year included in the csv file from FishBase references 
+year included in the csv file from FishBase references manually
 
 ```{r}
 data <- read_csv(file = "rfish_Linf_year.csv")
@@ -172,14 +171,14 @@ ggplot(data, aes(x = Species, y = Loo, fill = method)) +
   geom_boxplot() +
   theme_minimal() +
   xlab("Species") +
-  ylab("Linf (cm)") +
+  ylab(expression(L[infinity]~"(cm)")) +
   scale_fill_manual(values = c("scales" = "#DDCC77", "otoliths" = "#6699CC")) +
   theme(panel.background = element_rect(fill = "white"), 
         axis.text = element_text(size = 14), 
         axis.title = element_text(size = 16), 
         panel.grid.major = element_blank(), 
         panel.grid.minor = element_blank(),
-        axis.text.x = element_text(angle = 35, hjust = 1),
+        axis.text.x = element_text(angle = 55, hjust = 1),
         legend.text = element_text(size = 14),
         legend.title = element_text(size = 14))
 ```
