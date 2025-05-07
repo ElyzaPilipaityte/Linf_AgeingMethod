@@ -400,7 +400,6 @@ print(vbFitPlot3)
 
 ```
 
-
 # Roach
 
 ```{r}
@@ -519,8 +518,6 @@ vbFitPlot4 <- ggplot() +
            color='#404040', size=5, hjust=0)
 
 ```
-
-
 
 # One plot
 
@@ -1077,4 +1074,192 @@ vbFitPlot1 <- ggplot() +
 # Print the plot
 print(vbFitPlot1)
 
+```
+
+# Difference between readers in age estimation
+# perch
+```{r}
+perch23 <- data2023 %>% filter (spp_name_lt=="Eserys") %>% drop_na(age_Egle)
+
+# Count the number of observations for each age pair
+count_df <- perch23 %>%
+  count(age_Egle, age_Elyza) %>%
+  filter(n > 0)
+
+# Convert to numeric
+count_df$age_Egle <- as.numeric(as.character(count_df$age_Egle))
+count_df$age_Elyza <- as.numeric(as.character(count_df$age_Elyza))
+
+ggplot(count_df, aes(x = age_Egle, y = age_Elyza, label = n)) +
+  geom_text(size = 4) +
+  geom_abline(slope = 1, intercept = 0, color = "red", linetype = "dashed") +
+  labs(
+    title = "Comparison of Age Estimates with Counts",
+    x = "Age estimate by Reader 1 (Egle)",
+    y = "Age estimate by Reader 2 (Elyza)"
+  ) +
+  theme_minimal()
+
+# Scales
+perch23 <- data2023 %>% filter (spp_name_lt=="Eserys") %>% drop_na(age_scales2)
+
+# Count the number of observations for each age pair
+count_df <- perch23 %>%
+  count(age_scales2, age_scales) %>%
+  filter(n > 0)
+
+# Convert to numeric
+count_df$age_scales2 <- as.numeric(as.character(count_df$age_scales2))
+count_df$age_scales <- as.numeric(as.character(count_df$age_scales))
+
+ggplot(count_df, aes(x = age_scales2, y = age_scales, label = n)) +
+  geom_text(size = 4) +
+  geom_abline(slope = 1, intercept = 0, color = "red", linetype = "dashed") +
+  labs(
+    title = "Comparison of Age Estimates with Counts",
+    x = "Age estimate by Reader 1 (Audrius)",
+    y = "Age estimate by Reader 2 (Elyza)"
+  ) +
+  theme_minimal()
+```
+
+# pikeperch
+
+```{r}
+sander23 <- data2023 %>% filter (spp_name_lt=="Starkis") %>% drop_na(age_Egle)
+
+# Count the number of observations for each age pair
+count_df <- sander23 %>%
+  count(age_Egle, age_Elyza) %>%
+  filter(n > 0)
+
+# Convert to numeric
+count_df$age_Egle <- as.numeric(as.character(count_df$age_Egle))
+count_df$age_Elyza <- as.numeric(as.character(count_df$age_Elyza))
+
+ggplot(count_df, aes(x = age_Egle, y = age_Elyza, label = n)) +
+  geom_text(size = 4) +
+  geom_abline(slope = 1, intercept = 0, color = "red", linetype = "dashed") +
+  labs(
+    title = "Comparison of Age Estimates with Counts",
+    x = "Age estimate by Reader 1 (Egle)",
+    y = "Age estimate by Reader 2 (Elyza)"
+  ) +
+  theme_minimal()
+
+# Scales
+sander23 <- data2023 %>% filter (spp_name_lt=="Starkis") %>% drop_na(age_scales2)
+
+# Count the number of observations for each age pair
+count_df <- sander23 %>%
+  count(age_scales2, age_scales) %>%
+  filter(n > 0)
+
+# Convert to numeric
+count_df$age_scales2 <- as.numeric(as.character(count_df$age_scales2))
+count_df$age_scales <- as.numeric(as.character(count_df$age_scales))
+
+ggplot(count_df, aes(x = age_scales2, y = age_scales, label = n)) +
+  geom_text(size = 4) +
+  geom_abline(slope = 1, intercept = 0, color = "red", linetype = "dashed") +
+  labs(
+    title = "Comparison of Age Estimates with Counts",
+    x = "Age estimate by Reader 1 (Audrius)",
+    y = "Age estimate by Reader 2 (Elyza)"
+  ) +
+  theme_minimal()
+```
+
+# bream
+
+```{r}
+bream23 <- data2023 %>% filter (spp_name_lt=="Karsis") %>% drop_na(age_Egle)
+
+# Count the number of observations for each age pair
+count_df <- bream23 %>%
+  count(age_Egle, age_Elyza) %>%
+  filter(n > 0)
+
+# Convert to numeric
+count_df$age_Egle <- as.numeric(as.character(count_df$age_Egle))
+count_df$age_Elyza <- as.numeric(as.character(count_df$age_Elyza))
+
+ggplot(count_df, aes(x = age_Egle, y = age_Elyza, label = n)) +
+  geom_text(size = 4) +
+  geom_abline(slope = 1, intercept = 0, color = "red", linetype = "dashed") +
+  labs(
+    title = "Comparison of Age Estimates with Counts",
+    x = "Age estimate by Reader 1 (Egle)",
+    y = "Age estimate by Reader 2 (Elyza)"
+  ) +
+  theme_minimal()
+
+# Scales
+bream23 <- data2023 %>% filter (spp_name_lt=="Karsis") %>% drop_na(age_scales2)
+
+# Count the number of observations for each age pair
+count_df <- bream23 %>%
+  count(age_scales2, age_scales) %>%
+  filter(n > 0)
+
+# Convert to numeric
+count_df$age_scales2 <- as.numeric(as.character(count_df$age_scales2))
+count_df$age_scales <- as.numeric(as.character(count_df$age_scales))
+
+ggplot(count_df, aes(x = age_scales2, y = age_scales, label = n)) +
+  geom_text(size = 4) +
+  geom_abline(slope = 1, intercept = 0, color = "red", linetype = "dashed") +
+  labs(
+    title = "Comparison of Age Estimates with Counts",
+    x = "Age estimate by Reader 1 (Audrius)",
+    y = "Age estimate by Reader 2 (Elyza)"
+  ) +
+  theme_minimal()
+```
+
+# roach
+
+```{r}
+roach23 <- data2023 %>% filter (spp_name_lt=="Kuoja") %>% drop_na(age_Egle)
+
+# Count the number of observations for each age pair
+count_df <- roach23 %>%
+  count(age_Egle, age_Elyza) %>%
+  filter(n > 0)
+
+# Convert to numeric
+count_df$age_Egle <- as.numeric(as.character(count_df$age_Egle))
+count_df$age_Elyza <- as.numeric(as.character(count_df$age_Elyza))
+
+ggplot(count_df, aes(x = age_Egle, y = age_Elyza, label = n)) +
+  geom_text(size = 4) +
+  geom_abline(slope = 1, intercept = 0, color = "red", linetype = "dashed") +
+  labs(
+    title = "Comparison of Age Estimates with Counts",
+    x = "Age estimate by Reader 1 (Egle)",
+    y = "Age estimate by Reader 2 (Elyza)"
+  ) +
+  theme_minimal()
+
+# Scales
+roach23 <- data2023 %>% filter (spp_name_lt=="Kuoja") %>% drop_na(age_scales2)
+
+# Count the number of observations for each age pair
+count_df <- roach23 %>%
+  count(age_scales2, age_scales) %>%
+  filter(n > 0)
+
+# Convert to numeric
+count_df$age_scales2 <- as.numeric(as.character(count_df$age_scales2))
+count_df$age_scales <- as.numeric(as.character(count_df$age_scales))
+
+ggplot(count_df, aes(x = age_scales2, y = age_scales, label = n)) +
+  geom_text(size = 4) +
+  geom_abline(slope = 1, intercept = 0, color = "red", linetype = "dashed") +
+  labs(
+    title = "Comparison of Age Estimates with Counts",
+    x = "Age estimate by Reader 1 (Audrius)",
+    y = "Age estimate by Reader 2 (Elyza)"
+  ) +
+  theme_minimal()
 ```
