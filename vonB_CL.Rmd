@@ -18,6 +18,8 @@ library(FSA)     # for vbFuns(), vbStarts(), headtail(), peek()
 theme_set(theme_bw())
 library(investr)
 library(car)
+library(BayesGrowth)
+library(rstan)
 ```
 
 
@@ -961,6 +963,7 @@ perch <- rbind(perch23otoliths1, perch23otoliths2)
 perch$reader <- as.factor(perch$reader)
 perch$age <- as.numeric(perch$age)
 ```
+
 
 ```{r}
 vb <- vbFuns(param="Typical")     ## Typical VBGF
