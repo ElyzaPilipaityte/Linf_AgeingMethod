@@ -1266,3 +1266,1091 @@ ggplot(count_df, aes(x = age_scales2, y = age_scales, label = n)) +
   ) +
   theme_minimal()
 ```
+
+
+#### REVISION
+
+
+### Perch
+# perch otoliths
+```{r}
+data2023 <- read_csv(file = "2023.csv")
+
+perch23otoliths <- data2023 %>% filter (spp_name_lt=="Eserys") %>% select(Length = total_length, Age = age_Egle, sex_en) %>% drop_na(Age) %>% mutate(Length = Length * 10)
+
+```
+
+```{r}
+perch23otoliths <- as.data.frame(perch23otoliths)
+colSums(is.na(perch23otoliths))
+table(perch23otoliths$Age)
+
+```
+
+Priors - got from my article 1987-2023
+```{r}
+## Biological info - lengths in mm
+max_size <- 355
+max_size_se <- 17
+birth_size <- 0
+birth_size_se <- 0.001 #  cannot be zero
+```
+
+Model comparations 
+
+```{r}
+Looic <- Compare_Growth_Models(data = perch23otoliths,
+                                               stats = "LooIC",
+                                               iter = 10000, 
+                                               n_cores = 3,
+                                               n.chains = 4,
+                                               BurnIn = 1000,
+                                               thin = 1, 
+                                               Linf = max_size,
+                                               Linf.se = max_size_se,
+                                               L0 = birth_size,
+                                               L0.se = birth_size_se,
+                                               verbose = TRUE,
+                                               sigma.max = 100,
+                                               k.max = 1)
+# let's check which model is the best one
+Looic
+```
+VB  model is the best model
+
+Perch otoliths model
+```{r}
+# Use the function to estimate the rstan model
+MCMC_perchO <- Estimate_MCMC_Growth(perch23otoliths, 
+                                             Model = "VB" ,
+                                             iter = 10000, 
+                                             n.chains = 4,  # minimum of 3 chains recommended
+                                             BurnIn = 1000, # default is 10% of iterations
+                                             thin = 10,      # a thinning rate of 10 is applied to overcome autocorrelation
+                                             Linf = max_size,
+                                             Linf.se = max_size_se,
+                                             L0 = birth_size,
+                                             L0.se = birth_size_se,
+                                             sigma.max = 100,
+                                             verbose = TRUE,
+                                             k.max = 1)
+
+library(rstan)
+summary(MCMC_perchO, pars = c("Linf", "k", "L0", "sigma"))$summary
+str(MCMC_perchO, max.level = 2)
+
+```
+
+Chain convergence
+
+```{r}
+library(bayesplot)
+mcmc_combo(MCMC_perchO, pars = c("Linf", "k", "L0", "sigma")) 
+```
+
+This plot shows good model convergence. All of the chains overlap and each of the parameters has the correct posterior distribution with a single mode.
+
+
+Convergence can also be checked using a Gelman Rubin test. If all point estimates of the Gelman-Rubin diagnostic (R^
+) for each parameter are less than 1.2 then convergence has been reached. Ideally these should be close to one. If not, then the number of iterations should be increased. 
+```{r}
+rhats <- rhat(MCMC_perchO, pars = c("Linf", "k", "L0", "sigma"))
+mcmc_rhat(rhats)
+```
+
+Autocorrelation
+
+```{r}
+mcmc_acf(MCMC_perchO, pars = c("Linf", "k", "L0", "sigma"))
+```
+
+This plot shows the autocorrelation lag that occurs in the MCMC model for each parameter. If each parameter has an autocorrelation value of zero at the end of the lag series, then no autocorrelation has occurred.
+
+```{r}
+Get_MCMC_parameters(MCMC_perchO)
+
+# Return a growth curve with 50th and 95th percentiles
+growth_perchO <- Calculate_MCMC_growth_curve(obj = MCMC_perchO, Model = "VB",
+                                            max.age = 20, probs = c(.5,.95))
+library(tidybayes)
+library(ggplot2)
+
+ggplot(growth_perchO, aes(Age, LAA))+
+  geom_point(data = perch23otoliths, aes(Age, Length), alpha = .3)+
+geom_lineribbon(aes( ymin = .lower, ymax = .upper,
+                       fill = factor(.width)), linewidth = .8) +  labs(y = "Total Length (mm)", x = "Age (yrs)")+
+  scale_fill_brewer(palette="BuPu", direction=1,name =NULL)+
+  scale_y_continuous(expand = c(0,0))+
+  scale_x_continuous(expand = c(0,0), breaks = seq(0,13,1))+
+  theme_bw()+
+  theme(text = element_text(size = 14))
+```
+
+Perch growth model using scales
+
+```{r}
+perch23scales <- data2023 %>% filter (spp_name_lt=="Eserys") %>% select(Length = total_length, Age = age_scales, sex_en) %>% drop_na(Age) %>% mutate(Length = Length * 10)
+```
+
+```{r}
+perch23scales <- as.data.frame(perch23scales)
+colSums(is.na(perch23scales))
+table(perch23scales$Age)
+```
+
+Model comparisons 
+
+```{r}
+Looic <- Compare_Growth_Models(data = perch23scales,
+                                               stats = "LooIC",
+                                               iter = 10000, 
+                                               n_cores = 3,
+                                               n.chains = 4,
+                                               BurnIn = 1000,
+                                               thin = 1, 
+                                               Linf = max_size,
+                                               Linf.se = max_size_se,
+                                               L0 = birth_size,
+                                               L0.se = birth_size_se,
+                                               verbose = TRUE,
+                                               sigma.max = 100,
+                                               k.max = 1)
+
+Looic
+```
+
+VB model is the best model, I am using it further
+
+```{r}
+# Use the function to estimate the rstan model
+MCMC_perchS <- Estimate_MCMC_Growth(perch23scales, 
+                                             Model = "VB" ,
+                                             iter = 10000, 
+                                             n.chains = 4,  # minimum of 3 chains recommended
+                                             BurnIn = 1000, # default is 10% of iterations
+                                             thin = 10,      # a thinning rate of 10 is applied to overcome autocorrelation
+                                             Linf = max_size,
+                                             Linf.se = max_size_se,
+                                             L0 = birth_size,
+                                             L0.se = birth_size_se,
+                                             sigma.max = 100,
+                                             verbose = TRUE,
+                                             k.max = 1)
+
+summary(MCMC_perchS, pars = c("Linf", "k", "L0", "sigma"))$summary
+str(MCMC_perchS, max.level = 2)
+```
+
+```{r}
+mcmc_combo(MCMC_perchS, pars = c("Linf", "k", "L0", "sigma")) 
+```
+
+```{r}
+rhats <- rhat(MCMC_perchS, pars = c("Linf", "k", "L0", "sigma"))
+mcmc_rhat(rhats)
+```
+
+```{r}
+mcmc_acf(MCMC_perchS, pars = c("Linf", "k", "L0", "sigma"))
+Get_MCMC_parameters(MCMC_perchS)
+```
+
+```{r}
+# Return a growth curve with 50th and 95th percentiles
+growth_perchS <- Calculate_MCMC_growth_curve(obj = MCMC_perchS, Model = "VB",
+                                            max.age = 20, probs = c(.5,.95))
+
+ggplot(growth_perchS, aes(Age, LAA))+
+  geom_point(data = perch23scales, aes(Age, Length), alpha = .3)+
+geom_lineribbon(aes( ymin = .lower, ymax = .upper,
+                       fill = factor(.width)), linewidth = .8) +  labs(y = "Total Length (mm)", x = "Age (yrs)")+
+  scale_fill_brewer(palette="BuPu", direction=1,name =NULL)+
+  scale_y_continuous(expand = c(0,0))+
+  scale_x_continuous(expand = c(0,0), breaks = seq(0,15,1))+
+  theme_bw()+
+  theme(text = element_text(size = 14))
+```
+
+
+
+```{r}
+# Convert growth curves from mm to cm
+growth_perchS$LAA <- growth_perchS$LAA / 10
+growth_perchS$.lower <- growth_perchS$.lower / 10
+growth_perchS$.upper <- growth_perchS$.upper / 10
+
+growth_perchO$LAA <- growth_perchO$LAA / 10
+growth_perchO$.lower <- growth_perchO$.lower / 10
+growth_perchO$.upper <- growth_perchO$.upper / 10
+
+# Convert raw data from mm to cm
+perch23scales$Length <- perch23scales$Length / 10
+perch23otoliths$Length <- perch23otoliths$Length / 10
+
+
+# Tag each growth curve with a label
+growth_perchS$Source <- "Scales"
+growth_perchO$Source <- "Otoliths"
+
+# Combine the two into one data frame
+growth_both <- rbind(growth_perchS, growth_perchO)
+
+# Combine raw data for points
+perch23scales$Source <- "Scales"
+perch23otoliths$Source <- "Otoliths"
+raw_data <- rbind(perch23scales, perch23otoliths)
+
+ggplot(growth_both, aes(x = Age, y = LAA)) +
+  # Raw points
+  geom_point(data = raw_data, aes(x = Age, y = Length, color = Source), alpha = 0.3, inherit.aes = FALSE) +
+  
+  # Growth curve ribbons
+  geom_lineribbon(aes(ymin = .lower, ymax = .upper, fill = Source, 
+                      color = Source, group = interaction(Source, .width)), 
+                  alpha = 0.3, linewidth = 0.8) +
+
+  labs(y = "Total Length (cm)", x = "Age (yrs)") +
+
+  # Custom colors for ribbons and lines
+  scale_fill_manual(name = NULL, values = c("Scales" = "#E69F00", "Otoliths" = "#56B4E9")) +
+  scale_color_manual(name = NULL, values = c("Scales" = "#E69F00", "Otoliths" = "#56B4E9")) +
+
+  # Axis and theme tweaks
+  scale_y_continuous(expand = c(0, 0)) +
+  scale_x_continuous(expand = c(0, 0), breaks = seq(0, 15, 5)) +
+  theme_bw() +
+  theme(text = element_text(size = 14)) +
+  theme(panel.grid=element_blank(),
+        legend.position=c(0.8, 0.2),
+        axis.title=element_text(size=16),
+        axis.text=element_text(size=15),
+        legend.text=element_text(size=15),
+        legend.title=element_text(size=15))
+
+```
+
+
+## Pikeperch
+
+# otoliths
+
+```{r}
+sander23otoliths <- data2023 %>% filter (spp_name_lt=="Starkis") %>% select(Length = total_length, Age = age_Egle, sex_en) %>% drop_na(Age) %>% mutate(Length = Length * 10)
+```
+
+```{r}
+sander23otoliths <- as.data.frame(sander23otoliths)
+colSums(is.na(sander23otoliths))
+table(sander23otoliths$Age)
+
+```
+
+Priors - got from my article averaged between two periods 1987-2023
+```{r}
+## Biological info - lengths in mm
+max_size <- 1055
+max_size_se <- 492
+birth_size <- 0
+birth_size_se <- 0.001 #  cannot be zero
+```
+The model is highly sensitive to the choice of priors; increasing the maximum size and/or se improves convergence.
+
+Model comparations 
+
+```{r}
+Looic <- Compare_Growth_Models(data = sander23otoliths,
+                                               stats = "LooIC",
+                                               iter = 10000, 
+                                               n_cores = 3,
+                                               n.chains = 4,
+                                               BurnIn = 1000,
+                                               thin = 1, 
+                                               Linf = max_size,
+                                               Linf.se = max_size_se,
+                                               L0 = birth_size,
+                                               L0.se = birth_size_se,
+                                               verbose = TRUE,
+                                               sigma.max = 100,
+                                               k.max = 1)
+
+Looic
+```
+VB  model is the best model
+
+Perch otoliths model
+```{r}
+# Use the function to estimate the rstan model
+MCMC_sanderO <- Estimate_MCMC_Growth(sander23otoliths, 
+                                             Model = "VB" ,
+                                             iter = 10000, 
+                                             n.chains = 4,
+                                             BurnIn = 1000,
+                                             thin = 10, 
+                                             Linf = max_size,
+                                             Linf.se = max_size_se,
+                                             L0 = birth_size,
+                                             L0.se = birth_size_se,
+                                             sigma.max = 100,
+                                             verbose = TRUE,
+                                             k.max = 1)
+
+summary(MCMC_sanderO, pars = c("Linf", "k", "L0", "sigma"))$summary
+str(MCMC_sanderO, max.level = 2)
+```
+
+Chain convergence
+
+```{r}
+library(bayesplot)
+mcmc_combo(MCMC_sanderO, pars = c("Linf", "k", "L0", "sigma")) 
+```
+
+This plot shows good model convergence. All of the chains overlap and each of the parameters has the correct posterior distribution with a single mode.
+
+
+Convergence can also be checked using a Gelman Rubin test. If all point estimates of the Gelman-Rubin diagnostic (R^
+) for each parameter are less than 1.2 then convergence has been reached. Ideally these should be close to one. If not, then the number of iterations should be increased. 
+```{r}
+rhats <- rhat(MCMC_sanderO, pars = c("Linf", "k", "L0", "sigma"))
+mcmc_rhat(rhats)
+```
+
+Autocorrelation
+
+```{r}
+mcmc_acf(MCMC_sanderO, pars = c("Linf", "k", "L0", "sigma"))
+```
+
+This plot shows the autocorrelation lag that occurs in the MCMC model for each parameter. If each parameter has an autocorrelation value of zero at the end of the lag series, then no autocorrelation has occurred.
+
+```{r}
+Get_MCMC_parameters(MCMC_sanderO)
+
+# Return a growth curve with 50th and 95th percentiles
+growth_sanderO <- Calculate_MCMC_growth_curve(obj = MCMC_sanderO, Model = "VB",
+                                            max.age = 20, probs = c(.5,.95))
+
+library(tidybayes)
+library(ggplot2)
+
+ggplot(growth_sanderO, aes(Age, LAA))+
+  geom_point(data = sander23otoliths, aes(Age, Length), alpha = .3)+
+geom_lineribbon(aes( ymin = .lower, ymax = .upper,
+                       fill = factor(.width)), linewidth = .8) +  labs(y = "Total Length (mm)", x = "Age (yrs)")+
+  scale_fill_brewer(palette="BuPu", direction=1,name =NULL)+
+  scale_y_continuous(expand = c(0,0))+
+  scale_x_continuous(expand = c(0,0), breaks = seq(0,20,5))+
+  theme_bw()+
+  theme(text = element_text(size = 14))
+```
+
+# pikeperch scales
+
+```{r}
+sander23scales <- data2023 %>% filter (spp_name_lt=="Starkis") %>% select(Length = total_length, Age = age_scales, sex_en) %>% drop_na(Age) %>% mutate(Length = Length * 10)
+```
+
+```{r}
+sander23scales <- as.data.frame(sander23scales)
+colSums(is.na(sander23scales))
+table(sander23scales$Age)
+
+```
+
+Priors - got from my article averaged between two periods  cannot be zero.
+The model is highly sensitive to the choice of priors; increasing the maximum size and/or se improves convergence.
+
+Model comparisons 
+
+```{r}
+Looic <- Compare_Growth_Models(data = sander23scales,
+                                               stats = "LooIC",
+                                               iter = 10000, 
+                                               n_cores = 3,
+                                               n.chains = 4,
+                                               BurnIn = 1000,
+                                               thin = 1, 
+                                               Linf = max_size,
+                                               Linf.se = max_size_se,
+                                               L0 = birth_size,
+                                               L0.se = birth_size_se,
+                                               verbose = TRUE,
+                                               sigma.max = 100,
+                                               k.max = 1)
+
+Looic
+```
+VB  model is the best model
+
+Perch otoliths model
+```{r}
+# Use the function to estimate the rstan model
+MCMC_sanderS <- Estimate_MCMC_Growth(sander23scales, 
+                                             Model = "VB" ,
+                                             iter = 10000, 
+                                             n.chains = 4,
+                                             BurnIn = 1000,
+                                             thin = 10, 
+                                             Linf = max_size,
+                                             Linf.se = max_size_se,
+                                             L0 = birth_size,
+                                             L0.se = birth_size_se,
+                                             sigma.max = 100,
+                                             verbose = TRUE,
+                                             k.max = 1)
+
+summary(MCMC_sanderS, pars = c("Linf", "k", "L0", "sigma"))$summary
+str(MCMC_sanderS, max.level = 2)
+```
+
+Chain convergence
+
+```{r}
+library(bayesplot)
+mcmc_combo(MCMC_sanderS, pars = c("Linf", "k", "L0", "sigma")) 
+```
+
+This plot shows good model convergence. All of the chains overlap and each of the parameters has the correct posterior distribution with a single mode.
+
+
+Convergence can also be checked using a Gelman Rubin test. If all point estimates of the Gelman-Rubin diagnostic (R^
+) for each parameter are less than 1.2 then convergence has been reached. Ideally these should be close to one. If not, then the number of iterations should be increased. 
+```{r}
+rhats <- rhat(MCMC_sanderS, pars = c("Linf", "k", "L0", "sigma"))
+mcmc_rhat(rhats)
+```
+
+Autocorrelation
+
+```{r}
+mcmc_acf(MCMC_sanderS, pars = c("Linf", "k", "L0", "sigma"))
+```
+
+This plot shows the autocorrelation lag that occurs in the MCMC model for each parameter. If each parameter has an autocorrelation value of zero at the end of the lag series, then no autocorrelation has occurred.
+
+```{r}
+Get_MCMC_parameters(MCMC_sanderS)
+
+# Return a growth curve with 50th and 95th percentiles
+growth_sanderS <- Calculate_MCMC_growth_curve(obj = MCMC_sanderS, Model = "VB",
+                                            max.age = 20, probs = c(.5,.95))
+
+library(tidybayes)
+library(ggplot2)
+
+ggplot(growth_sanderS, aes(Age, LAA))+
+  geom_point(data = sander23scales, aes(Age, Length), alpha = .3)+
+geom_lineribbon(aes( ymin = .lower, ymax = .upper,
+                       fill = factor(.width)), linewidth = .8) +  labs(y = "Total Length (mm)", x = "Age (yrs)")+
+  scale_fill_brewer(palette="BuPu", direction=1,name =NULL)+
+  scale_y_continuous(expand = c(0,0))+
+  scale_x_continuous(expand = c(0,0), breaks = seq(0,20,5))+
+  theme_bw()+
+  theme(text = element_text(size = 14))
+```
+
+```{r}
+# Convert growth curves from mm to cm
+growth_sanderS$LAA <- growth_sanderS$LAA / 10
+growth_sanderS$.lower <- growth_sanderS$.lower / 10
+growth_sanderS$.upper <- growth_sanderS$.upper / 10
+
+growth_sanderO$LAA <- growth_sanderO$LAA / 10
+growth_sanderO$.lower <- growth_sanderO$.lower / 10
+growth_sanderO$.upper <- growth_sanderO$.upper / 10
+
+# Convert raw data from mm to cm
+sander23scales$Length <- sander23scales$Length / 10
+sander23otoliths$Length <- sander23otoliths$Length / 10
+
+
+# Tag each growth curve with a label
+growth_sanderS$Source <- "Scales"
+growth_sanderO$Source <- "Otoliths"
+
+# Combine the two into one data frame
+growth_both <- rbind(growth_sanderS, growth_sanderO)
+
+# Combine raw data for points
+sander23scales$Source <- "Scales"
+sander23otoliths$Source <- "Otoliths"
+raw_data <- rbind(sander23scales, sander23otoliths)
+
+ggplot(growth_both, aes(x = Age, y = LAA)) +
+  # Raw points
+  geom_point(data = raw_data, aes(x = Age, y = Length, color = Source), alpha = 0.3, inherit.aes = FALSE) +
+  
+  # Growth curve ribbons
+  geom_lineribbon(aes(ymin = .lower, ymax = .upper, fill = Source, 
+                      color = Source, group = interaction(Source, .width)), 
+                  alpha = 0.3, linewidth = 0.8) +
+
+  labs(y = "Total Length (cm)", x = "Age (yrs)") +
+
+  # Custom colors for ribbons and lines
+  scale_fill_manual(name = NULL, values = c("Scales" = "#E69F00", "Otoliths" = "#56B4E9")) +
+  scale_color_manual(name = NULL, values = c("Scales" = "#E69F00", "Otoliths" = "#56B4E9")) +
+
+  # Axis and theme tweaks
+  scale_y_continuous(expand = c(0, 0)) +
+  scale_x_continuous(expand = c(0, 0), breaks = seq(0, 15, 5)) +
+  theme_bw() +
+  theme(text = element_text(size = 14)) +
+  theme(panel.grid=element_blank(),
+        legend.position=c(0.8, 0.2),
+        axis.title=element_text(size=16),
+        axis.text=element_text(size=15),
+        legend.text=element_text(size=15),
+        legend.title=element_text(size=15))
+
+```
+
+
+## Roach
+
+# roach otoliths
+
+```{r}
+roach23otoliths <- data2023 %>% filter (spp_name_lt=="Kuoja") %>% select(Length = total_length, Age = age_Egle, sex_en) %>% drop_na(Age) %>% mutate(Length = Length * 10)
+```
+
+```{r}
+roach23otoliths <- as.data.frame(roach23otoliths)
+colSums(is.na(roach23otoliths))
+table(roach23otoliths$Age)
+```
+
+Priors - got from my article averaged between two periods 1987-2023
+```{r}
+## Biological info - lengths in mm
+max_size <- 418
+max_size_se <- 21
+birth_size <- 0
+birth_size_se <- 0.001 #  cannot be zero
+```
+The model is highly sensitive to the choice of priors; increasing the maximum size and/or se improves convergence.
+
+Model comparations 
+
+```{r}
+Looic <- Compare_Growth_Models(data = roach23otoliths,
+                                               stats = "LooIC",
+                                               iter = 10000, 
+                                               n_cores = 3,
+                                               n.chains = 4,
+                                               BurnIn = 1000,
+                                               thin = 1, 
+                                               Linf = max_size,
+                                               Linf.se = max_size_se,
+                                               L0 = birth_size,
+                                               L0.se = birth_size_se,
+                                               verbose = TRUE,
+                                               sigma.max = 100,
+                                               k.max = 1)
+
+Looic
+```
+VB  model is the best model
+
+Perch otoliths model
+```{r}
+# Use the function to estimate the rstan model
+MCMC_roachO <- Estimate_MCMC_Growth(roach23otoliths, 
+                                             Model = "VB" ,
+                                             iter = 10000, 
+                                             n.chains = 4,
+                                             BurnIn = 1000,
+                                             thin = 10, 
+                                             Linf = max_size,
+                                             Linf.se = max_size_se,
+                                             L0 = birth_size,
+                                             L0.se = birth_size_se,
+                                             sigma.max = 100,
+                                             verbose = TRUE,
+                                             k.max = 1)
+
+summary(MCMC_roachO, pars = c("Linf", "k", "L0", "sigma"))$summary
+str(MCMC_roachO, max.level = 2)
+```
+
+Chain convergence
+
+```{r}
+library(bayesplot)
+mcmc_combo(MCMC_roachO, pars = c("Linf", "k", "L0", "sigma")) 
+```
+
+This plot shows good model convergence. All of the chains overlap and each of the parameters has the correct posterior distribution with a single mode.
+
+
+Convergence can also be checked using a Gelman Rubin test. If all point estimates of the Gelman-Rubin diagnostic (R^
+) for each parameter are less than 1.2 then convergence has been reached. Ideally these should be close to one. If not, then the number of iterations should be increased. 
+```{r}
+rhats <- rhat(MCMC_roachO, pars = c("Linf", "k", "L0", "sigma"))
+mcmc_rhat(rhats)
+```
+
+Autocorrelation
+
+```{r}
+mcmc_acf(MCMC_roachO, pars = c("Linf", "k", "L0", "sigma"))
+```
+
+This plot shows the autocorrelation lag that occurs in the MCMC model for each parameter. If each parameter has an autocorrelation value of zero at the end of the lag series, then no autocorrelation has occurred.
+
+```{r}
+Get_MCMC_parameters(MCMC_roachO)
+
+# Return a growth curve with 50th and 95th percentiles
+growth_roachO <- Calculate_MCMC_growth_curve(obj = MCMC_roachO, Model = "VB",
+                                            max.age = 20, probs = c(.5,.95))
+
+library(tidybayes)
+library(ggplot2)
+
+ggplot(growth_roachO, aes(Age, LAA))+
+  geom_point(data = roach23otoliths, aes(Age, Length), alpha = .3)+
+geom_lineribbon(aes( ymin = .lower, ymax = .upper,
+                       fill = factor(.width)), linewidth = .8) +  labs(y = "Total Length (mm)", x = "Age (yrs)")+
+  scale_fill_brewer(palette="BuPu", direction=1,name =NULL)+
+  scale_y_continuous(expand = c(0,0))+
+  scale_x_continuous(expand = c(0,0), breaks = seq(0,20,5))+
+  theme_bw()+
+  theme(text = element_text(size = 14))
+```
+
+# roach scales
+
+```{r}
+roach23scales <- data2023 %>% filter (spp_name_lt=="Kuoja") %>% select(Length = total_length, Age = age_scales, sex_en) %>% drop_na(Age) %>% mutate(Length = Length * 10)
+```
+
+```{r}
+roach23scales <- as.data.frame(roach23scales)
+colSums(is.na(roach23scales))
+table(roach23scales$Age)
+
+```
+
+Priors - got from my article averaged between two periods  cannot be zero.
+The model is highly sensitive to the choice of priors; increasing the maximum size and/or se improves convergence.
+
+Model comparisons 
+
+```{r}
+Looic <- Compare_Growth_Models(data = roach23scales,
+                                               stats = "LooIC",
+                                               iter = 10000, 
+                                               n_cores = 3,
+                                               n.chains = 4,
+                                               BurnIn = 1000,
+                                               thin = 1, 
+                                               Linf = max_size,
+                                               Linf.se = max_size_se,
+                                               L0 = birth_size,
+                                               L0.se = birth_size_se,
+                                               verbose = TRUE,
+                                               sigma.max = 100,
+                                               k.max = 1)
+
+Looic
+```
+VB  model is the best model
+
+Perch otoliths model
+```{r}
+# Use the function to estimate the rstan model
+MCMC_roachS <- Estimate_MCMC_Growth(roach23scales, 
+                                             Model = "VB" ,
+                                             iter = 10000, 
+                                             n.chains = 4,
+                                             BurnIn = 1000,
+                                             thin = 10, 
+                                             Linf = max_size,
+                                             Linf.se = max_size_se,
+                                             L0 = birth_size,
+                                             L0.se = birth_size_se,
+                                             sigma.max = 100,
+                                             verbose = TRUE,
+                                             k.max = 1)
+
+summary(MCMC_roachS, pars = c("Linf", "k", "L0", "sigma"))$summary
+str(MCMC_roachS, max.level = 2)
+```
+
+Chain convergence
+
+```{r}
+library(bayesplot)
+mcmc_combo(MCMC_roachS, pars = c("Linf", "k", "L0", "sigma")) 
+```
+
+This plot shows good model convergence. All of the chains overlap and each of the parameters has the correct posterior distribution with a single mode.
+
+
+Convergence can also be checked using a Gelman Rubin test. If all point estimates of the Gelman-Rubin diagnostic (R^
+) for each parameter are less than 1.2 then convergence has been reached. Ideally these should be close to one. If not, then the number of iterations should be increased. 
+```{r}
+rhats <- rhat(MCMC_roachS, pars = c("Linf", "k", "L0", "sigma"))
+mcmc_rhat(rhats)
+```
+
+Autocorrelation
+
+```{r}
+mcmc_acf(MCMC_roachS, pars = c("Linf", "k", "L0", "sigma"))
+```
+
+This plot shows the autocorrelation lag that occurs in the MCMC model for each parameter. If each parameter has an autocorrelation value of zero at the end of the lag series, then no autocorrelation has occurred.
+
+```{r}
+Get_MCMC_parameters(MCMC_roachS)
+
+# Return a growth curve with 50th and 95th percentiles
+growth_roachS <- Calculate_MCMC_growth_curve(obj = MCMC_roachS, Model = "VB",
+                                            max.age = 20, probs = c(.5,.95))
+
+library(tidybayes)
+library(ggplot2)
+
+ggplot(growth_roachS, aes(Age, LAA))+
+  geom_point(data = roach23scales, aes(Age, Length), alpha = .3)+
+geom_lineribbon(aes( ymin = .lower, ymax = .upper,
+                       fill = factor(.width)), linewidth = .8) +  labs(y = "Total Length (mm)", x = "Age (yrs)")+
+  scale_fill_brewer(palette="BuPu", direction=1,name =NULL)+
+  scale_y_continuous(expand = c(0,0))+
+  scale_x_continuous(expand = c(0,0), breaks = seq(0,20,5))+
+  theme_bw()+
+  theme(text = element_text(size = 14))
+```
+
+```{r}
+# Convert growth curves from mm to cm
+growth_roachS$LAA <- growth_roachS$LAA / 10
+growth_roachS$.lower <- growth_roachS$.lower / 10
+growth_roachS$.upper <- growth_roachS$.upper / 10
+
+growth_roachO$LAA <- growth_roachO$LAA / 10
+growth_roachO$.lower <- growth_roachO$.lower / 10
+growth_roachO$.upper <- growth_roachO$.upper / 10
+
+# Convert raw data from mm to cm
+roach23scales$Length <- roach23scales$Length / 10
+roach23otoliths$Length <- roach23otoliths$Length / 10
+
+
+# Tag each growth curve with a label
+growth_roachS$Source <- "Scales"
+growth_roachO$Source <- "Otoliths"
+
+# Combine the two into one data frame
+growth_both <- rbind(growth_roachS, growth_roachO)
+
+# Combine raw data for points
+roach23scales$Source <- "Scales"
+roach23otoliths$Source <- "Otoliths"
+raw_data <- rbind(roach23scales, roach23otoliths)
+
+ggplot(growth_both, aes(x = Age, y = LAA)) +
+  # Raw points
+  geom_point(data = raw_data, aes(x = Age, y = Length, color = Source), alpha = 0.3, inherit.aes = FALSE) +
+  
+  # Growth curve ribbons
+  geom_lineribbon(aes(ymin = .lower, ymax = .upper, fill = Source, 
+                      color = Source, group = interaction(Source, .width)), 
+                  alpha = 0.3, linewidth = 0.8) +
+
+  labs(y = "Total Length (cm)", x = "Age (yrs)") +
+
+  # Custom colors for ribbons and lines
+  scale_fill_manual(name = NULL, values = c("Scales" = "#E69F00", "Otoliths" = "#56B4E9")) +
+  scale_color_manual(name = NULL, values = c("Scales" = "#E69F00", "Otoliths" = "#56B4E9")) +
+
+  # Axis and theme tweaks
+  scale_y_continuous(expand = c(0, 0)) +
+  scale_x_continuous(expand = c(0, 0), breaks = seq(0, 15, 5)) +
+  theme_bw() +
+  theme(text = element_text(size = 14)) +
+  theme(panel.grid=element_blank(),
+        legend.position=c(0.8, 0.2),
+        axis.title=element_text(size=16),
+        axis.text=element_text(size=15),
+        legend.text=element_text(size=15),
+        legend.title=element_text(size=15))
+
+```
+
+
+## Bream
+
+# bream otoliths
+
+```{r}
+bream23otoliths <- data2023 %>% filter (spp_name_lt=="Karsis") %>% select(Length = total_length, Age = age_Egle, sex_en) %>% drop_na(Age) %>% mutate(Length = Length * 10)
+```
+
+```{r}
+bream23otoliths <- as.data.frame(bream23otoliths)
+colSums(is.na(bream23otoliths))
+table(bream23otoliths$Age)
+```
+
+Priors - got from my article averaged between two periods 1987-2023
+```{r}
+## Biological info - lengths in mm
+max_size <- 570
+max_size_se <- 24
+birth_size <- 0
+birth_size_se <- 0.001 #  cannot be zero
+```
+The model is highly sensitive to the choice of priors; increasing the maximum size and/or se improves convergence.
+
+Model comparations 
+
+```{r}
+Looic <- Compare_Growth_Models(data = bream23otoliths,
+                                               stats = "LooIC",
+                                               iter = 10000, 
+                                               n_cores = 3,
+                                               n.chains = 4,
+                                               BurnIn = 1000,
+                                               thin = 1, 
+                                               Linf = max_size,
+                                               Linf.se = max_size_se,
+                                               L0 = birth_size,
+                                               L0.se = birth_size_se,
+                                               verbose = TRUE,
+                                               sigma.max = 100,
+                                               k.max = 1)
+
+Looic
+```
+VB  model is the best model
+
+Perch otoliths model
+```{r}
+# Use the function to estimate the rstan model
+MCMC_breamO <- Estimate_MCMC_Growth(bream23otoliths, 
+                                             Model = "VB" ,
+                                             iter = 10000, 
+                                             n.chains = 4,
+                                             BurnIn = 1000,
+                                             thin = 10, 
+                                             Linf = max_size,
+                                             Linf.se = max_size_se,
+                                             L0 = birth_size,
+                                             L0.se = birth_size_se,
+                                             sigma.max = 100,
+                                             verbose = TRUE,
+                                             k.max = 1)
+
+summary(MCMC_breamO, pars = c("Linf", "k", "L0", "sigma"))$summary
+str(MCMC_roachO, max.level = 2)
+```
+
+Chain convergence
+
+```{r}
+library(bayesplot)
+mcmc_combo(MCMC_roachO, pars = c("Linf", "k", "L0", "sigma")) 
+```
+
+This plot shows good model convergence. All of the chains overlap and each of the parameters has the correct posterior distribution with a single mode.
+
+
+Convergence can also be checked using a Gelman Rubin test. If all point estimates of the Gelman-Rubin diagnostic (R^
+) for each parameter are less than 1.2 then convergence has been reached. Ideally these should be close to one. If not, then the number of iterations should be increased. 
+```{r}
+rhats <- rhat(MCMC_roachO, pars = c("Linf", "k", "L0", "sigma"))
+mcmc_rhat(rhats)
+```
+
+Autocorrelation
+
+```{r}
+mcmc_acf(MCMC_roachO, pars = c("Linf", "k", "L0", "sigma"))
+```
+
+This plot shows the autocorrelation lag that occurs in the MCMC model for each parameter. If each parameter has an autocorrelation value of zero at the end of the lag series, then no autocorrelation has occurred.
+
+```{r}
+Get_MCMC_parameters(MCMC_roachO)
+
+# Return a growth curve with 50th and 95th percentiles
+growth_roachO <- Calculate_MCMC_growth_curve(obj = MCMC_roachO, Model = "VB",
+                                            max.age = 20, probs = c(.5,.95))
+
+library(tidybayes)
+library(ggplot2)
+
+ggplot(growth_roachO, aes(Age, LAA))+
+  geom_point(data = roach23otoliths, aes(Age, Length), alpha = .3)+
+geom_lineribbon(aes( ymin = .lower, ymax = .upper,
+                       fill = factor(.width)), linewidth = .8) +  labs(y = "Total Length (mm)", x = "Age (yrs)")+
+  scale_fill_brewer(palette="BuPu", direction=1,name =NULL)+
+  scale_y_continuous(expand = c(0,0))+
+  scale_x_continuous(expand = c(0,0), breaks = seq(0,20,5))+
+  theme_bw()+
+  theme(text = element_text(size = 14))
+```
+
+# roach scales
+
+```{r}
+roach23scales <- data2023 %>% filter (spp_name_lt=="Kuoja") %>% select(Length = total_length, Age = age_scales, sex_en) %>% drop_na(Age) %>% mutate(Length = Length * 10)
+```
+
+```{r}
+roach23scales <- as.data.frame(roach23scales)
+colSums(is.na(roach23scales))
+table(roach23scales$Age)
+
+```
+
+Priors - got from my article averaged between two periods  cannot be zero.
+The model is highly sensitive to the choice of priors; increasing the maximum size and/or se improves convergence.
+
+Model comparisons 
+
+```{r}
+Looic <- Compare_Growth_Models(data = roach23scales,
+                                               stats = "LooIC",
+                                               iter = 10000, 
+                                               n_cores = 3,
+                                               n.chains = 4,
+                                               BurnIn = 1000,
+                                               thin = 1, 
+                                               Linf = max_size,
+                                               Linf.se = max_size_se,
+                                               L0 = birth_size,
+                                               L0.se = birth_size_se,
+                                               verbose = TRUE,
+                                               sigma.max = 100,
+                                               k.max = 1)
+
+Looic
+```
+VB  model is the best model
+
+Perch otoliths model
+```{r}
+# Use the function to estimate the rstan model
+MCMC_roachS <- Estimate_MCMC_Growth(roach23scales, 
+                                             Model = "VB" ,
+                                             iter = 10000, 
+                                             n.chains = 4,
+                                             BurnIn = 1000,
+                                             thin = 10, 
+                                             Linf = max_size,
+                                             Linf.se = max_size_se,
+                                             L0 = birth_size,
+                                             L0.se = birth_size_se,
+                                             sigma.max = 100,
+                                             verbose = TRUE,
+                                             k.max = 1)
+
+summary(MCMC_roachS, pars = c("Linf", "k", "L0", "sigma"))$summary
+str(MCMC_roachS, max.level = 2)
+```
+
+Chain convergence
+
+```{r}
+library(bayesplot)
+mcmc_combo(MCMC_roachS, pars = c("Linf", "k", "L0", "sigma")) 
+```
+
+This plot shows good model convergence. All of the chains overlap and each of the parameters has the correct posterior distribution with a single mode.
+
+
+Convergence can also be checked using a Gelman Rubin test. If all point estimates of the Gelman-Rubin diagnostic (R^
+) for each parameter are less than 1.2 then convergence has been reached. Ideally these should be close to one. If not, then the number of iterations should be increased. 
+```{r}
+rhats <- rhat(MCMC_roachS, pars = c("Linf", "k", "L0", "sigma"))
+mcmc_rhat(rhats)
+```
+
+Autocorrelation
+
+```{r}
+mcmc_acf(MCMC_roachS, pars = c("Linf", "k", "L0", "sigma"))
+```
+
+This plot shows the autocorrelation lag that occurs in the MCMC model for each parameter. If each parameter has an autocorrelation value of zero at the end of the lag series, then no autocorrelation has occurred.
+
+```{r}
+Get_MCMC_parameters(MCMC_roachS)
+
+# Return a growth curve with 50th and 95th percentiles
+growth_roachS <- Calculate_MCMC_growth_curve(obj = MCMC_roachS, Model = "VB",
+                                            max.age = 20, probs = c(.5,.95))
+
+library(tidybayes)
+library(ggplot2)
+
+ggplot(growth_roachS, aes(Age, LAA))+
+  geom_point(data = roach23scales, aes(Age, Length), alpha = .3)+
+geom_lineribbon(aes( ymin = .lower, ymax = .upper,
+                       fill = factor(.width)), linewidth = .8) +  labs(y = "Total Length (mm)", x = "Age (yrs)")+
+  scale_fill_brewer(palette="BuPu", direction=1,name =NULL)+
+  scale_y_continuous(expand = c(0,0))+
+  scale_x_continuous(expand = c(0,0), breaks = seq(0,20,5))+
+  theme_bw()+
+  theme(text = element_text(size = 14))
+```
+
+```{r}
+# Convert growth curves from mm to cm
+growth_roachS$LAA <- growth_roachS$LAA / 10
+growth_roachS$.lower <- growth_roachS$.lower / 10
+growth_roachS$.upper <- growth_roachS$.upper / 10
+
+growth_roachO$LAA <- growth_roachO$LAA / 10
+growth_roachO$.lower <- growth_roachO$.lower / 10
+growth_roachO$.upper <- growth_roachO$.upper / 10
+
+# Convert raw data from mm to cm
+roach23scales$Length <- roach23scales$Length / 10
+roach23otoliths$Length <- roach23otoliths$Length / 10
+
+
+# Tag each growth curve with a label
+growth_roachS$Source <- "Scales"
+growth_roachO$Source <- "Otoliths"
+
+# Combine the two into one data frame
+growth_both <- rbind(growth_roachS, growth_roachO)
+
+# Combine raw data for points
+roach23scales$Source <- "Scales"
+roach23otoliths$Source <- "Otoliths"
+raw_data <- rbind(roach23scales, roach23otoliths)
+
+ggplot(growth_both, aes(x = Age, y = LAA)) +
+  # Raw points
+  geom_point(data = raw_data, aes(x = Age, y = Length, color = Source), alpha = 0.3, inherit.aes = FALSE) +
+  
+  # Growth curve ribbons
+  geom_lineribbon(aes(ymin = .lower, ymax = .upper, fill = Source, 
+                      color = Source, group = interaction(Source, .width)), 
+                  alpha = 0.3, linewidth = 0.8) +
+
+  labs(y = "Total Length (cm)", x = "Age (yrs)") +
+
+  # Custom colors for ribbons and lines
+  scale_fill_manual(name = NULL, values = c("Scales" = "#E69F00", "Otoliths" = "#56B4E9")) +
+  scale_color_manual(name = NULL, values = c("Scales" = "#E69F00", "Otoliths" = "#56B4E9")) +
+
+  # Axis and theme tweaks
+  scale_y_continuous(expand = c(0, 0)) +
+  scale_x_continuous(expand = c(0, 0), breaks = seq(0, 15, 5)) +
+  theme_bw() +
+  theme(text = element_text(size = 14)) +
+  theme(panel.grid=element_blank(),
+        legend.position=c(0.8, 0.2),
+        axis.title=element_text(size=16),
+        axis.text=element_text(size=15),
+        legend.text=element_text(size=15),
+        legend.title=element_text(size=15))
+
+```
