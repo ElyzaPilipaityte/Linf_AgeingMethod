@@ -168,11 +168,11 @@ ggplot(data, aes(x = as.factor(year), y = Loo, color = method, shape = Type)) +
   labs(shape = "Length Type")
 
 ggplot(data, aes(x = Species, y = Loo, fill = method)) +
-  geom_boxplot() +
+  geom_boxplot(alpha = 0.6) +
   theme_minimal() +
   xlab("Species") +
   ylab(expression(L[infinity]~"(cm)")) +
-  scale_fill_manual(values = c("scales" = "#DDCC77", "otoliths" = "#6699CC")) +
+  scale_fill_manual(values = c("scales" = "#D55E00", "otoliths" = "#332288")) +
   theme(panel.background = element_rect(fill = "white"), 
         axis.text = element_text(size = 14), 
         axis.title = element_text(size = 16), 
