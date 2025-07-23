@@ -151,6 +151,9 @@ table(data$year)
 table(data$Locality)
 table(data$Sex)
 table(data$Species)
+table(data$method)
+table(data$Species, data$method)
+
 
 ggplot(data, aes(x = as.factor(year), y = Loo, color = method)) +
   geom_jitter(size = 2) +
@@ -276,6 +279,14 @@ anova(m7, m6)
 anova(m2, m6)
 ```
 
+Z transformation
+```{r}
+data$Linf_z <- scale(data$Loo)
+data$K_z <- scale(data$K)
+
+m1 <- lmer(Linf_z ~ method + (1|Species) + (1|K_z), data = data, REML = F)
+```
+
 ```{r}
 # Summarise neatly in a table
 tab_model(m1,
@@ -358,8 +369,125 @@ hist((residuals(m1)), breaks = 30, main = "Histogram of Residuals")
 ### REVISION
 
 ```{r}
+library(brms)
 
+# Define two formulas for the responses
+f1 <- bf(Linf_z ~ method + (1 | Species))
+f2 <- bf(K_z ~ method + (1 | Species))
+
+# Fit multi-response model
+fit_multi <- brm(f1 + f2 + set_rescor(FALSE),  # set_rescor = FALSE to assume independent residuals
+                 data = data,
+                 chains = 4, cores = 4,
+                 iter = 4000,
+                 control = list(adapt_delta = 0.95))
+
+
+summary(fit_multi)
+
+# Get marginal effects (fixed effects only)
+plot(marginal_effects(fit_multi), ask = FALSE)
+```
+
+```{r}
+# For Loo (L∞)
+new_data_Loo <- data.frame(method = c("otoliths", "scales"))
+pred_Loo <- as.data.frame(fitted(fit, newdata = new_data_Loo, re_formula = NA, resp = "Loo", summary = TRUE))
+pred_Loo$response <- "Loo"
+pred_Loo$method <- new_data_Loo$method
+
+# For K
+new_data_K <- data.frame(method = c("otoliths", "scales"))
+pred_K <- as.data.frame(fitted(fit, newdata = new_data_K, re_formula = NA, resp = "K", summary = TRUE))
+pred_K$response <- "K"
+pred_K$method <- new_data_K$method
+
+# Combine
+pred_df_long <- rbind(pred_Loo, pred_K)
+
+
+library(ggplot2)
+library(tidyr)
+library(dplyr)
+
+# Long format for original data
+data_long <- data %>%
+  pivot_longer(cols = c(Loo, K), names_to = "response", values_to = "value")
+
+# Plot
+ggplot(data_long, aes(x = method, y = value)) +
+  geom_jitter(width = 0.2, alpha = 0.4, color = "gray") +
+  geom_pointrange(data = pred_df_long,
+                  aes(y = Estimate, ymin = Q2.5, ymax = Q97.5),
+                  color = "blue", size = 1.2) +
+  facet_wrap(~ response, scales = "free_y") +
+  theme_minimal() +
+  labs(x = "Ageing Method", y = "Value", title = "Effect of Ageing Method on L∞ and K")
+
+ggplot(pred_df_long, aes(x = method, y = Estimate, color = method)) +
+  geom_pointrange(aes(ymin = Q2.5, ymax = Q97.5), size = 1.2) +
+  facet_wrap(~ response, scales = "free_y") +
+  theme_minimal() +
+  labs(title = "Model Estimates of L∞ and K by Ageing Method",
+       y = "Estimated Value", x = "Ageing Method") +
+  theme(legend.position = "none")
 
 
 ```
+
+```{r}
+library(brms)
+library(bayesplot)
+
+# Extract posterior samples
+posterior <- as_draws_df(fit_multi)
+
+# Select only fixed effects
+posterior_selected <- posterior %>%
+  dplyr::select(b_Linfz_methodscales, b_Kz_methodscales)
+
+# Plot posterior distributions with 80% and 95% credible intervals
+bayesplot::mcmc_areas(
+  posterior_selected,
+  prob = 0.95,        # 95% CI
+  prob_outer = 1.0,   # Full range
+  point_est = "mean"
+) +
+  ggplot2::labs(
+    title = "Posterior Distributions of Ageing Method Effect",
+    x = "Estimate (z-scale)",
+    y = NULL
+  )
+
+```
+
+```{r}
+# Get conditional effects
+ce <- conditional_effects(fit_multi)
+
+# Plot both responses
+plot(ce, points = TRUE)[[1]]  # for Linf_z
+plot(ce, points = TRUE)[[2]]  # for K_z
+
+```
+
+```{r}
+posterior_long <- posterior %>%
+  dplyr::select(
+    L_inf = b_Linfz_methodscales,
+    K = b_Kz_methodscales
+  ) %>%
+  tidyr::pivot_longer(cols = everything(), names_to = "Parameter", values_to = "Estimate")
+
+ggplot(posterior_long, aes(x = Estimate, fill = Parameter)) +
+  geom_density(alpha = 0.6) +
+  geom_vline(xintercept = 0, linetype = "dashed") +
+  facet_wrap(~ Parameter, scales = "free") +
+  theme_minimal() +
+  labs(title = "Posterior Distributions: Effect of Scale Method on Growth Parameters",
+       x = "Posterior Estimate", y = "Density")
+
+```
+
+
 
