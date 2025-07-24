@@ -27,7 +27,7 @@ My_theme <- theme(
 )
 ```
 
-popgrowth tables
+# popgrowth tables
 
 ```{r}
 # getting species names from fishbase
@@ -104,6 +104,7 @@ data_filtered_final <- data_filtered %>%
 table(data_filtered_final$Species)
 ```
 
+# load data with year
 year included in the csv file from FishBase references manually
 
 ```{r}
@@ -224,6 +225,8 @@ round(vif(lm(Loo ~ method + Species + year,
 
 round(vif(lm(K ~ method + Species + year,
                      data = data)),2)
+
+cor(data$Loo, data$K)
 ```
 
 5. Relationships among response and independent variables
@@ -284,12 +287,19 @@ Z transformation
 data$Linf_z <- scale(data$Loo)
 data$K_z <- scale(data$K)
 
-m1 <- lmer(Linf_z ~ method + (1|Species) + (1|K_z), data = data, REML = F)
+m1 <- lmer(Loo ~ method + (1|Species), data = data, REML = F)
+m2 <- lmer(Loo ~ method + (1|Species) + (1|K), data = data, REML = F)
+anova(m1, m2)
+m3 <- lmer(Loo ~ method + K + (1|Species), data = data, REML = F)
+anova(m1, m3)
+
+m4 <- lmer(Linf_z ~ method + K_z + (1|Species), data = data, REML = F)
+anova(m1, m4)
 ```
 
 ```{r}
 # Summarise neatly in a table
-tab_model(m1,
+tab_model(m4,
           show.zeroinf = F,
            string.pred = "Coefficient",
              string.ci = "Conf. Int (95%)",
@@ -308,24 +318,98 @@ Residuals
 plot(m1, which = 1)
 
 # 2. Normality of residuals: Q-Q plot of residuals
-qqnorm(residuals(m1))
-qqline(residuals(m1))
+qqnorm(residuals(m4))
+qqline(residuals(m4))
 
 # 3. Normality of random effects: Q-Q plot for random effects
-qqnorm(ranef(m1)$Species[,1])
-qqline(ranef(m1)$Species[,1])
+qqnorm(ranef(m4)$Species[,1])
+qqline(ranef(m4)$Species[,1])
 
 # 4. Variance of random effects (Species)
-summary(m1)$varcor
+summary(m4)$varcor
 
-hist((residuals(m1)), breaks = 30, main = "Histogram of Residuals")
+hist((residuals(m4)), breaks = 30, main = "Histogram of Residuals")
 ```
 
-K Model
+# K Model
+
+Data exploration 
+
+1. Outliers in response and independent variables
 
 ```{r}
+ggplot(data = data) + 
+  geom_point(mapping = aes(x = K_z, y = Species, color=as.factor(method)), size = 2.5)
+# no outliers
+
+
+```
+
+2. Normality and homogeneity of the response variable
+
+```{r}
+# Frequency plot
+
+hist(data$K_z,  xlab = "Length (cm)",
+     col = "lightblue", border = "black", main = "")
+
+```
+
+3. Balance of categorical variables
+
+```{r}
+table(data$Species)
+table(data$method)
+table(data$year)
+```
+
+4. Multicollinearity among covariates
+
+```{r}
+#Calculate Variance Inflation Factor (VIF)
+round(vif(lm(Loo ~ method + Species + year,
+                     data = data)),2)
+
+round(vif(lm(K ~ method + Species + year,
+                     data = data)),2)
+```
+
+5. Relationships among response and independent variables
+
+```{r}
+# Interaction? Plot data
+ggplot(data, aes(x = year, y = (Loo), color = Species)) +
+  geom_point(shape = 16, size = 2, alpha = 0.7, position = "jitter") +
+  geom_smooth(method = 'lm', colour = 'red', se = FALSE, size = 1.5) +
+  xlab("method") + ylab("Linf (cm)") +
+  facet_wrap(~method)
+
+ggplot(data, aes(x = year, y = (Linf_stand), color = Species)) +
+  geom_point(shape = 16, size = 2, alpha = 0.7, position = "jitter") +
+  geom_smooth(method = 'lm', colour = 'red', se = FALSE, size = 1.5) +
+  xlab("method") + ylab("Linf (cm)") +
+  facet_wrap(~method)
+
+
+
+ggplot(data, aes(x = method, y = (Loo), color = Species)) +
+  geom_point(shape = 16, size = 2, alpha = 0.7, position = "jitter") +
+  geom_smooth(method = 'lm', colour = 'red', se = FALSE, size = 1.5) +
+  xlab("method") + ylab("Linf (cm)")
+
+ggplot(data, aes(x = method, y = (Linf_stand), color = Species)) +
+  geom_point(shape = 16, size = 2, alpha = 0.7, position = "jitter") +
+  geom_smooth(method = 'lm', colour = 'red', se = FALSE, size = 1.5) +
+  xlab("method") + ylab("Linf (cm)")
+```
+
+
+```{r}
+data$Linf_z <- scale(data$Loo)
+data$K_z <- scale(data$K)
+
 m0 <- lm(K ~ method, data = data)
-m1 <- lmer(K ~ method + (1|Species), data = data, REML = F)
+m1 <- lmer(K_z ~ method + Linf_z + (1|Species), data = data, REML = F)
 m2 <- lmer(K ~ method + (1|Species) + (1|year), data = data, REML = F)
 anova(m1, m2)
 
