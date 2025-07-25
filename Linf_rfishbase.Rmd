@@ -19,7 +19,7 @@ library(car)
 
 My_theme <- theme(
   panel.background = element_blank(),
-  panel.border = element_rect(fill = NA, linewidth = 1.25),
+  panel.border = element_rect(fill = NA, linewidth = 1),
   strip.background = element_rect(fill = "white", color = "white", linewidth = 1.25),
   text = element_text(size = 16, family = "gillsans"),
   panel.grid.major = element_blank(),  # Remove major grid lines
@@ -111,6 +111,8 @@ year included in the csv file from FishBase references manually
 data <- read_csv(file = "rfish_Linf_year.csv")
 ```
 
+Let's look at the data 
+
 ```{r}
 str(data)
 
@@ -120,7 +122,7 @@ ggplot(data, aes(x = year, y = method, fill = method)) +
   ylab("method") +
   My_theme
 
-
+# I exclude estimate made a long time ago compared to the others
 data <- data %>% filter(year > 1925)
 
 ggplot(data, aes(x = year, y = method, fill = method)) +
@@ -129,13 +131,13 @@ ggplot(data, aes(x = year, y = method, fill = method)) +
   ylab("method") +
   My_theme
 
+# Number of estimations per year and method
 ggplot(data, aes(x = year, fill = method)) +
   geom_bar(position = "dodge") +
   xlab("Year") +
   ylab("Count") +
   scale_x_continuous(breaks = seq(min(data$year), max(data$year), by = 10)) +
  My_theme
-
 
 data_summary <- data %>%
   group_by(year, method) %>%
@@ -148,6 +150,8 @@ ggplot(data_summary, aes(x = year, y = Frequency, color = method)) +
   My_theme + 
 geom_smooth(method = "lm", se = TRUE, size = 1.5)
 
+# It does not show the differences between methods used in different years
+
 table(data$year)
 table(data$Locality)
 table(data$Sex)
@@ -155,38 +159,49 @@ table(data$Species)
 table(data$method)
 table(data$Species, data$method)
 
-
 ggplot(data, aes(x = as.factor(year), y = Loo, color = method)) +
   geom_jitter(size = 2) +
-  My_theme +
   facet_wrap(~ Species) +
   scale_x_discrete(breaks = unique(data$year)[seq(1, length(unique(data$year)), by = 10)]) +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1))
-
-ggplot(data, aes(x = as.factor(year), y = Loo, color = method, shape = Type)) +
-  geom_jitter(size = 2) +
-  My_theme +
-  facet_wrap(~ Species) +
-  scale_x_discrete(breaks = unique(data$year)[seq(1, length(unique(data$year)), by = 10)]) +
+  labs(
+    x = "Year",
+    y = expression(L[infinity]~"(cm)"),
+    color = "Method"
+  ) +
   theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
-  labs(shape = "Length Type")
+  My_theme
 
+```
+
+Plot showing Linf differences between species and methods
+
+```{r}
 ggplot(data, aes(x = Species, y = Loo, fill = method)) +
-  geom_boxplot(alpha = 0.6) +
+  # Boxplots: semi-transparent
+  geom_boxplot(alpha = 0.4, position = position_dodge(width = 0.75)) +
+  # Dots: fully opaque (no alpha)
+  geom_jitter(
+    aes(color = method),
+    position = position_jitterdodge(jitter.width = 0.2, dodge.width = 0.75),
+    size = 1.8
+  ) +
+  scale_fill_manual(values = c("scales" = "#D55E00", "otoliths" = "#332288")) +
+  scale_color_manual(values = c("scales" = "#D55E00", "otoliths" = "#332288")) +
   theme_minimal() +
   xlab("Species") +
   ylab(expression(L[infinity]~"(cm)")) +
-  scale_fill_manual(values = c("scales" = "#D55E00", "otoliths" = "#332288")) +
-  theme(panel.background = element_rect(fill = "white"), 
-        axis.text = element_text(size = 14), 
-        axis.title = element_text(size = 16), 
-        panel.grid.major = element_blank(), 
-        panel.grid.minor = element_blank(),
-        axis.text.x = element_text(angle = 55, hjust = 1),
-        legend.text = element_text(size = 14),
-        legend.title = element_text(size = 14))
-```
+  theme(
+    panel.background = element_rect(fill = "white"), 
+    axis.text = element_text(size = 14), 
+    axis.title = element_text(size = 16), 
+    panel.grid.major = element_blank(), 
+    panel.grid.minor = element_blank(),
+    axis.text.x = element_text(angle = 55, hjust = 1),
+    legend.text = element_text(size = 14),
+    legend.title = element_text(size = 14)
+  )
 
+```
 
 Data exploration 
 
@@ -202,10 +217,8 @@ ggplot(data = data) +
 
 ```{r}
 # Frequency plot
-
 hist(data$Loo,  xlab = "Length (cm)",
      col = "lightblue", border = "black", main = "")
-
 ```
 
 3. Balance of categorical variables
@@ -215,17 +228,18 @@ table(data$Species)
 table(data$method)
 table(data$year)
 ```
+The data is balanced across methods and species. However, for each year, there are only one or a few observations, so I cannot include year in the model. Previous plots also showed no clear temporal trend in the use of scales and otoliths, despite our initial assumption that scales were used in earlier years and otoliths in more recent years.
 
 4. Multicollinearity among covariates
 
 ```{r}
 #Calculate Variance Inflation Factor (VIF)
-round(vif(lm(Loo ~ method + Species + year,
+round(vif(lm(Loo ~ method + Species + K,
                      data = data)),2)
 
-round(vif(lm(K ~ method + Species + year,
+round(vif(lm(K ~ method + Species + Loo,
                      data = data)),2)
-
+# There is moderate collinearity between Linf and the other predictors because Linf is species specific
 cor(data$Loo, data$K)
 ```
 
@@ -245,8 +259,6 @@ ggplot(data, aes(x = year, y = (Linf_stand), color = Species)) +
   xlab("method") + ylab("Linf (cm)") +
   facet_wrap(~method)
 
-
-
 ggplot(data, aes(x = method, y = (Loo), color = Species)) +
   geom_point(shape = 16, size = 2, alpha = 0.7, position = "jitter") +
   geom_smooth(method = 'lm', colour = 'red', se = FALSE, size = 1.5) +
@@ -259,43 +271,27 @@ ggplot(data, aes(x = method, y = (Linf_stand), color = Species)) +
 ```
 
 
-Models
+# Linf Models
 
 ```{r}
-m0 <- lm(Loo ~ method, data = data)
-m1 <- lmer(Loo ~ method + (1|Species), data = data, REML = F)
-m2 <- lmer(Loo ~ method + (1|Species) + (1|year), data = data, REML = F)
-anova(m1, m2)
-
-m3 <- lmer(Loo ~ method + (1|Species) + (1|year) + (1|Locality), data = data, REML = F)
-anova(m2, m3)
-
-m4 <- lmer(Linf_stand ~ method + (1|Species), data = data, REML = F)
-m5 <- lmer(Linf_stand ~ method + year + (1|Species), data = data, REML = F)
-anova(m4, m5)
-
-m6 <- lmer(Linf_stand ~ method + (1|Species) + (1|year), data = data, REML = F)
-m7 <- lmer(Linf_stand ~ method + (1|Species) + (1|year) + (1|Locality), data = data, REML = F)
-anova(m4, m6)
-anova(m7, m6)
-
-anova(m2, m6)
-```
-
-Z transformation
-```{r}
+# Z transformation
 data$Linf_z <- scale(data$Loo)
 data$K_z <- scale(data$K)
 
 m1 <- lmer(Loo ~ method + (1|Species), data = data, REML = F)
-m2 <- lmer(Loo ~ method + (1|Species) + (1|K), data = data, REML = F)
-anova(m1, m2)
-m3 <- lmer(Loo ~ method + K + (1|Species), data = data, REML = F)
-anova(m1, m3)
+# Linf transformed
+m2 <- lmer(Linf_z ~ method + (1|Species), data = data, REML = F)
+# K trannsformed included as fixed effect
+m3 <- lmer(Loo ~ method + K_z + (1|Species), data = data, REML = F)
+# K trannsformed included as random effect
+m4 <- lmer(Loo ~ method + (1|Species) + (1|K_z), data = data, REML = F)
 
-m4 <- lmer(Linf_z ~ method + K_z + (1|Species), data = data, REML = F)
-anova(m1, m4)
+anova(m1, m3)
+anova(m2, m4)
+
 ```
+
+
 
 ```{r}
 # Summarise neatly in a table
@@ -308,28 +304,90 @@ tab_model(m4,
                 emph.p = FALSE,
              transform = NULL)
 
-plot_model(m2)
 ```
 
 Residuals
 
 ```{r}
 # 1. Linearity & Homoscedasticity: Residuals vs Fitted plot
-plot(m1, which = 1)
+resid <- resid(m4)
+fitted <- fitted(m4)
+
+plot(fitted, resid,
+     xlab = "Fitted values",
+     ylab = "Residuals",
+     cex.lab = 1.3,
+     cex.axis = 1.2
+)
+abline(h = 0, col = "red")
 
 # 2. Normality of residuals: Q-Q plot of residuals
-qqnorm(residuals(m4))
-qqline(residuals(m4))
+qqnorm(resid(m4))
+qqline(resid(m4))
 
-# 3. Normality of random effects: Q-Q plot for random effects
-qqnorm(ranef(m4)$Species[,1])
-qqline(ranef(m4)$Species[,1])
+# 3. Normality of random effects: Q-Q plot for random effect
+qqnorm(ranef(m4)$K_z[,1])
+qqline(ranef(m4)$K_z[,1])
 
 # 4. Variance of random effects (Species)
 summary(m4)$varcor
 
-hist((residuals(m4)), breaks = 30, main = "Histogram of Residuals")
+# 5. Histogram of Residuals
+hist((residuals(m4)), breaks = 30, main = " ")
 ```
+
+```{r}
+library(patchwork)
+
+# 1. Residuals vs Fitted
+resid <- resid(m4)
+fitted <- fitted(m4)
+res_df <- data.frame(Fitted = fitted, Residuals = resid)
+
+p1 <- ggplot(res_df, aes(x = Fitted, y = Residuals)) +
+  geom_point(alpha = 0.6) +
+  geom_hline(yintercept = 0, color = "red") +
+  labs(title = "Residuals vs Fitted",
+       x = "Fitted values", y = "Residuals") +
+  My_theme
+
+# 2. QQ Plot of Residuals
+p2 <- ggplot(res_df, aes(sample = Residuals)) +
+  stat_qq() +
+  stat_qq_line(color = "red") +
+  labs(title = "QQ Plot of Residuals",
+       x = "Theoretical", y = "Sample")  +
+  My_theme
+
+# 3. QQ Plot of Random Effects
+ranef_vals <- ranef(m4)$Species[,1]
+ranef_df <- data.frame(ranef = ranef_vals)
+
+p3 <- ggplot(ranef_df, aes(sample = ranef)) +
+  stat_qq() +
+  stat_qq_line(color = "red") +
+  labs(title = "QQ Plot of Random Effects",
+       x = "Theoretical", y = "Random Intercepts")  +
+  My_theme
+
+# 4. Histogram of Residuals
+p4 <- ggplot(res_df, aes(x = Residuals)) +
+  geom_histogram(bins = 32, fill = "gray70", color = "black") +
+  labs(title = "Histogram of Residuals",
+       x = "Residuals", y = "Count")  +
+  My_theme
+
+final_plot <- gridExtra::grid.arrange(p1, p2, p3, p4, ncol = 2)
+```
+
+Save
+```{r}
+library(grid)
+tiff("modelFit_Linf.tiff", width = 300, height = 250, units = "mm", res = 300, compression = "lzw")
+grid.draw(final_plot)
+dev.off()
+```
+
 
 # K Model
 
@@ -339,9 +397,8 @@ Data exploration
 
 ```{r}
 ggplot(data = data) + 
-  geom_point(mapping = aes(x = K_z, y = Species, color=as.factor(method)), size = 2.5)
+  geom_point(mapping = aes(x = K, y = Species, color=as.factor(method)), size = 2.5)
 # no outliers
-
 
 ```
 
@@ -350,8 +407,14 @@ ggplot(data = data) +
 ```{r}
 # Frequency plot
 
-hist(data$K_z,  xlab = "Length (cm)",
+hist(data$K_trans,  xlab = "Length (cm)",
      col = "lightblue", border = "black", main = "")
+
+```
+
+```{r}
+data$K_trans <- sqrt(data$K)
+# data$K_trans <- log(data$K)
 
 ```
 
@@ -367,58 +430,46 @@ table(data$year)
 
 ```{r}
 #Calculate Variance Inflation Factor (VIF)
-round(vif(lm(Loo ~ method + Species + year,
+round(vif(lm(K ~ method + Species + Loo,
                      data = data)),2)
 
-round(vif(lm(K ~ method + Species + year,
+round(vif(lm(K_trans ~ method + Species + Linf_z,
                      data = data)),2)
 ```
+I cannot use species and Linf as explanatory variables in the same model because they can cause multicollinearity issues.
 
 5. Relationships among response and independent variables
 
 ```{r}
 # Interaction? Plot data
-ggplot(data, aes(x = year, y = (Loo), color = Species)) +
+ggplot(data, aes(x = year, y = (K), color = Species)) +
   geom_point(shape = 16, size = 2, alpha = 0.7, position = "jitter") +
   geom_smooth(method = 'lm', colour = 'red', se = FALSE, size = 1.5) +
-  xlab("method") + ylab("Linf (cm)") +
+  xlab("method") + ylab("K (cm)") +
   facet_wrap(~method)
 
-ggplot(data, aes(x = year, y = (Linf_stand), color = Species)) +
+ggplot(data, aes(x = year, y = (K_trans), color = Species)) +
   geom_point(shape = 16, size = 2, alpha = 0.7, position = "jitter") +
   geom_smooth(method = 'lm', colour = 'red', se = FALSE, size = 1.5) +
-  xlab("method") + ylab("Linf (cm)") +
+  xlab("method") + ylab("K (cm)") +
   facet_wrap(~method)
 
-
-
-ggplot(data, aes(x = method, y = (Loo), color = Species)) +
-  geom_point(shape = 16, size = 2, alpha = 0.7, position = "jitter") +
-  geom_smooth(method = 'lm', colour = 'red', se = FALSE, size = 1.5) +
-  xlab("method") + ylab("Linf (cm)")
-
-ggplot(data, aes(x = method, y = (Linf_stand), color = Species)) +
-  geom_point(shape = 16, size = 2, alpha = 0.7, position = "jitter") +
-  geom_smooth(method = 'lm', colour = 'red', se = FALSE, size = 1.5) +
-  xlab("method") + ylab("Linf (cm)")
 ```
 
 
 ```{r}
-data$Linf_z <- scale(data$Loo)
-data$K_z <- scale(data$K)
-
 m0 <- lm(K ~ method, data = data)
-m1 <- lmer(K_z ~ method + Linf_z + (1|Species), data = data, REML = F)
-m2 <- lmer(K ~ method + (1|Species) + (1|year), data = data, REML = F)
-anova(m1, m2)
+m1 <- lmer(K ~ method + (1|Species), data = data, REML = F)
+m2 <- lmer(K_z ~ method + (1|Linf_z), data = data, REML = F)
+m3 <- lmer(K ~ method + (1|Loo), data = data, REML = F)
+m4 <- lmer(K_trans ~ method + (1|Loo), data = data, REML = F)
 
 ```
 
 
 ```{r}
 # Summarise neatly in a table
-tab_model(m1,
+tab_model(m4,
           show.zeroinf = F,
            string.pred = "Coefficient",
              string.ci = "Conf. Int (95%)",
@@ -433,144 +484,72 @@ Residuals
 
 ```{r}
 # 1. Linearity & Homoscedasticity: Residuals vs Fitted plot
-plot(m1, which = 1)
+plot(m4)
 
 # 2. Normality of residuals: Q-Q plot of residuals
-qqnorm(residuals(m1))
-qqline(residuals(m1))
+qqnorm(residuals(m4))
+qqline(residuals(m4))
 
 # 3. Normality of random effects: Q-Q plot for random effects
-qqnorm(ranef(m1)$Species[,1])
-qqline(ranef(m1)$Species[,1])
+qqnorm(ranef(m4)$Linf_z[,1])
+qqline(ranef(m4)$Linf_z[,1])
 
 # 4. Variance of random effects (Species)
-summary(m1)$varcor
+summary(m4)$varcor
 
-hist((residuals(m1)), breaks = 30, main = "Histogram of Residuals")
-```
-
-
-### REVISION
-
-```{r}
-library(brms)
-
-# Define two formulas for the responses
-f1 <- bf(Linf_z ~ method + (1 | Species))
-f2 <- bf(K_z ~ method + (1 | Species))
-
-# Fit multi-response model
-fit_multi <- brm(f1 + f2 + set_rescor(FALSE),  # set_rescor = FALSE to assume independent residuals
-                 data = data,
-                 chains = 4, cores = 4,
-                 iter = 4000,
-                 control = list(adapt_delta = 0.95))
-
-
-summary(fit_multi)
-
-# Get marginal effects (fixed effects only)
-plot(marginal_effects(fit_multi), ask = FALSE)
+hist((residuals(m4)), breaks = 30, main = "Histogram of Residuals")
 ```
 
 ```{r}
-# For Loo (L∞)
-new_data_Loo <- data.frame(method = c("otoliths", "scales"))
-pred_Loo <- as.data.frame(fitted(fit, newdata = new_data_Loo, re_formula = NA, resp = "Loo", summary = TRUE))
-pred_Loo$response <- "Loo"
-pred_Loo$method <- new_data_Loo$method
+library(patchwork)
 
-# For K
-new_data_K <- data.frame(method = c("otoliths", "scales"))
-pred_K <- as.data.frame(fitted(fit, newdata = new_data_K, re_formula = NA, resp = "K", summary = TRUE))
-pred_K$response <- "K"
-pred_K$method <- new_data_K$method
+# 1. Residuals vs Fitted
+resid <- resid(m4)
+fitted <- fitted(m4)
+res_df <- data.frame(Fitted = fitted, Residuals = resid)
 
-# Combine
-pred_df_long <- rbind(pred_Loo, pred_K)
+p1 <- ggplot(res_df, aes(x = Fitted, y = Residuals)) +
+  geom_point(alpha = 0.6) +
+  geom_hline(yintercept = 0, color = "red") +
+  labs(title = "Residuals vs Fitted",
+       x = "Fitted values", y = "Residuals") +
+  My_theme
 
+# 2. QQ Plot of Residuals
+p2 <- ggplot(res_df, aes(sample = Residuals)) +
+  stat_qq() +
+  stat_qq_line(color = "red") +
+  labs(title = "QQ Plot of Residuals",
+       x = "Theoretical", y = "Sample")  +
+  My_theme
 
-library(ggplot2)
-library(tidyr)
-library(dplyr)
+# 3. QQ Plot of Random Effects
+ranef_vals <- ranef(m4)$Loo[,1]
+ranef_df <- data.frame(ranef = ranef_vals)
 
-# Long format for original data
-data_long <- data %>%
-  pivot_longer(cols = c(Loo, K), names_to = "response", values_to = "value")
+p3 <- ggplot(ranef_df, aes(sample = ranef)) +
+  stat_qq() +
+  stat_qq_line(color = "red") +
+  labs(title = "QQ Plot of Random Effects",
+       x = "Theoretical", y = "Random Intercepts")  +
+  My_theme
 
-# Plot
-ggplot(data_long, aes(x = method, y = value)) +
-  geom_jitter(width = 0.2, alpha = 0.4, color = "gray") +
-  geom_pointrange(data = pred_df_long,
-                  aes(y = Estimate, ymin = Q2.5, ymax = Q97.5),
-                  color = "blue", size = 1.2) +
-  facet_wrap(~ response, scales = "free_y") +
-  theme_minimal() +
-  labs(x = "Ageing Method", y = "Value", title = "Effect of Ageing Method on L∞ and K")
+# 4. Histogram of Residuals
+p4 <- ggplot(res_df, aes(x = Residuals)) +
+  geom_histogram(bins = 32, fill = "gray70", color = "black") +
+  labs(title = "Histogram of Residuals",
+       x = "Residuals", y = "Count")  +
+  My_theme
 
-ggplot(pred_df_long, aes(x = method, y = Estimate, color = method)) +
-  geom_pointrange(aes(ymin = Q2.5, ymax = Q97.5), size = 1.2) +
-  facet_wrap(~ response, scales = "free_y") +
-  theme_minimal() +
-  labs(title = "Model Estimates of L∞ and K by Ageing Method",
-       y = "Estimated Value", x = "Ageing Method") +
-  theme(legend.position = "none")
-
-
+final_plot <- gridExtra::grid.arrange(p1, p2, p3, p4, ncol = 2)
 ```
 
+Save
 ```{r}
-library(brms)
-library(bayesplot)
-
-# Extract posterior samples
-posterior <- as_draws_df(fit_multi)
-
-# Select only fixed effects
-posterior_selected <- posterior %>%
-  dplyr::select(b_Linfz_methodscales, b_Kz_methodscales)
-
-# Plot posterior distributions with 80% and 95% credible intervals
-bayesplot::mcmc_areas(
-  posterior_selected,
-  prob = 0.95,        # 95% CI
-  prob_outer = 1.0,   # Full range
-  point_est = "mean"
-) +
-  ggplot2::labs(
-    title = "Posterior Distributions of Ageing Method Effect",
-    x = "Estimate (z-scale)",
-    y = NULL
-  )
-
-```
-
-```{r}
-# Get conditional effects
-ce <- conditional_effects(fit_multi)
-
-# Plot both responses
-plot(ce, points = TRUE)[[1]]  # for Linf_z
-plot(ce, points = TRUE)[[2]]  # for K_z
-
-```
-
-```{r}
-posterior_long <- posterior %>%
-  dplyr::select(
-    L_inf = b_Linfz_methodscales,
-    K = b_Kz_methodscales
-  ) %>%
-  tidyr::pivot_longer(cols = everything(), names_to = "Parameter", values_to = "Estimate")
-
-ggplot(posterior_long, aes(x = Estimate, fill = Parameter)) +
-  geom_density(alpha = 0.6) +
-  geom_vline(xintercept = 0, linetype = "dashed") +
-  facet_wrap(~ Parameter, scales = "free") +
-  theme_minimal() +
-  labs(title = "Posterior Distributions: Effect of Scale Method on Growth Parameters",
-       x = "Posterior Estimate", y = "Density")
-
+library(grid)
+tiff("modelFit_K.tiff", width = 300, height = 250, units = "mm", res = 300, compression = "lzw")
+grid.draw(final_plot)
+dev.off()
 ```
 
 
