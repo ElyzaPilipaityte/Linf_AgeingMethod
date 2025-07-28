@@ -1285,6 +1285,9 @@ perch23otoliths <- as.data.frame(perch23otoliths)
 colSums(is.na(perch23otoliths))
 table(perch23otoliths$Age)
 
+min(perch23otoliths$Length)
+max(perch23otoliths$Length)
+mean(perch23otoliths$Length)
 ```
 
 Priors - got from my article 1987-2023
@@ -1389,6 +1392,10 @@ perch23scales <- data2023 %>% filter (spp_name_lt=="Eserys") %>% select(Length =
 perch23scales <- as.data.frame(perch23scales)
 colSums(is.na(perch23scales))
 table(perch23scales$Age)
+
+min(perch23scales$Length)
+max(perch23scales$Length)
+mean(perch23scales$Length)
 ```
 
 Model comparisons
@@ -1546,6 +1553,9 @@ sander23otoliths <- as.data.frame(sander23otoliths)
 colSums(is.na(sander23otoliths))
 table(sander23otoliths$Age)
 
+min(sander23otoliths$Length)
+max(sander23otoliths$Length)
+mean(sander23otoliths$Length)
 ```
 
 Priors - got from my article (Pilipaityte et al. 2025) averaged between both periods
@@ -1652,6 +1662,9 @@ sander23scales <- as.data.frame(sander23scales)
 colSums(is.na(sander23scales))
 table(sander23scales$Age)
 
+min(sander23scales$Length)
+max(sander23scales$Length)
+mean(sander23scales$Length)
 ```
 
 Model comparisons 
@@ -1814,6 +1827,10 @@ roach23otoliths <- data2023 %>% filter (spp_name_lt=="Kuoja") %>% select(Length 
 roach23otoliths <- as.data.frame(roach23otoliths)
 colSums(is.na(roach23otoliths))
 table(roach23otoliths$Age)
+
+min(roach23otoliths$Length)
+max(roach23otoliths$Length)
+mean(roach23otoliths$Length)
 ```
 
 Priors - got from Pilipaityte et al. 2025 averaged between two periods (1947-2023)
@@ -1920,6 +1937,9 @@ roach23scales <- as.data.frame(roach23scales)
 colSums(is.na(roach23scales))
 table(roach23scales$Age)
 
+min(roach23scales$Length)
+max(roach23scales$Length)
+mean(roach23scales$Length)
 ```
 
 Model comparisons 
@@ -2082,6 +2102,10 @@ bream23otoliths <- data2023 %>% filter (spp_name_lt=="Karsis") %>% select(Length
 bream23otoliths <- as.data.frame(bream23otoliths)
 colSums(is.na(bream23otoliths))
 table(bream23otoliths$Age)
+
+min(bream23otoliths$Length)
+max(bream23otoliths$Length)
+mean(bream23otoliths$Length)
 ```
 
 Priors - got from Pilipaityte et. al (2025) averaged between two periods (1947-2023)
@@ -2188,6 +2212,9 @@ bream23scales <- as.data.frame(bream23scales)
 colSums(is.na(bream23scales))
 table(bream23scales$Age)
 
+min(bream23scales$Length)
+max(bream23scales$Length)
+mean(bream23scales$Length)
 ```
 
 Model comparisons 
