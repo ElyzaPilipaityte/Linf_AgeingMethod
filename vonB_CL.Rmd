@@ -1345,7 +1345,7 @@ str(MCMC_perchO, max.level = 2)
 Chain convergence
 ```{r}
 library(bayesplot)
-mcmc_combo(MCMC_perchO, pars = c("Linf", "k", "L0", "sigma")) 
+mcmc_combo(MCMC_perchO, pars = c("Linf", "k", "L0", "sigma"))
 ```
 This plot shows good model convergence. All of the chains overlap and each of the parameters has the correct posterior distribution with a single mode.
 
