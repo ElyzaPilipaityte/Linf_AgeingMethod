@@ -1476,12 +1476,17 @@ paramsPS_filtered <- params_PS %>% filter(Parameter %in% c("Linf", "K"))
 paramsPO_filtered <- params_PO %>% filter(Parameter %in% c("Linf", "K"))
 
 label_PS <- paste0("Scales:\n",
-                   "Linf = ", round(params_PS$mean[params_PS$Parameter == "Linf"]/10, 2), " ± ", round(params_PS$se_mean[params_PS$Parameter == "Linf"]/10, 2), " cm\n",
-                   "K = ", round(params_PS$mean[params_PS$Parameter == "k"], 2), " ± ", round(params_PS$se_mean[params_PS$Parameter == "k"], 2))
+                   "L∞ = ", round(params_PS$mean[params_PS$Parameter == "Linf"]/10, 2), " ± ",
+                   round(params_PS$se_mean[params_PS$Parameter == "Linf"]/10, 2), " cm\n",
+                   "K = ", round(params_PS$mean[params_PS$Parameter == "k"], 2), " ± ",
+                   round(params_PS$se_mean[params_PS$Parameter == "k"], 2))
 
 label_PO <- paste0("Otoliths:\n",
-                   "Linf = ", round(params_PO$mean[params_PO$Parameter == "Linf"]/10, 2), " ± ", round(params_PO$se_mean[params_PO$Parameter == "Linf"]/10, 2), " cm\n",
-                   "K = ", round(params_PO$mean[params_PO$Parameter == "k"], 2), " ± ", round(params_PO$se_mean[params_PO$Parameter == "k"], 2))
+                   "L∞ = ", round(params_PO$mean[params_PO$Parameter == "Linf"]/10, 2), " ± ",
+                   round(params_PO$se_mean[params_PO$Parameter == "Linf"]/10, 2), " cm\n",
+                   "K = ", round(params_PO$mean[params_PO$Parameter == "k"], 2), " ± ",
+                   round(params_PO$se_mean[params_PO$Parameter == "k"], 2))
+
 ```
 
 
@@ -1751,11 +1756,11 @@ geom_lineribbon(aes( ymin = .lower, ymax = .upper,
 
 ```{r}
 label_SS <- paste0("Scales:\n",
-                   "Linf = ", round(params_SS$mean[params_SS$Parameter == "Linf"]/10, 2), " ± ", round(params_SS$se_mean[params_SS$Parameter == "Linf"]/10, 2), " cm\n",
+                   "L∞ = ", round(params_SS$mean[params_SS$Parameter == "Linf"]/10, 2), " ± ", round(params_SS$se_mean[params_SS$Parameter == "Linf"]/10, 2), " cm\n",
                    "K = ", round(params_SS$mean[params_SS$Parameter == "k"], 2), " ± ", round(params_SS$se_mean[params_SS$Parameter == "k"], 2))
 
 label_SO <- paste0("Otoliths:\n",
-                   "Linf = ", round(params_SO$mean[params_SO$Parameter == "Linf"]/10, 2), " ± ", round(params_SO$se_mean[params_SO$Parameter == "Linf"]/10, 2), " cm\n",
+                   "L∞ = ", round(params_SO$mean[params_SO$Parameter == "Linf"]/10, 2), " ± ", round(params_SO$se_mean[params_SO$Parameter == "Linf"]/10, 2), " cm\n",
                    "K = ", round(params_SO$mean[params_SO$Parameter == "k"], 2), " ± ", round(params_SO$se_mean[params_SO$Parameter == "k"], 2))
 ```
 
@@ -2026,11 +2031,11 @@ geom_lineribbon(aes( ymin = .lower, ymax = .upper,
 
 ```{r}
 label_RS <- paste0("Scales:\n",
-                   "Linf = ", round(params_RS$mean[params_RS$Parameter == "Linf"]/10, 2), " ± ", round(params_RS$se_mean[params_RS$Parameter == "Linf"]/10, 2), " cm\n",
+                   "L∞ = ", round(params_RS$mean[params_RS$Parameter == "Linf"]/10, 2), " ± ", round(params_RS$se_mean[params_RS$Parameter == "Linf"]/10, 2), " cm\n",
                    "K = ", round(params_RS$mean[params_RS$Parameter == "k"], 2), " ± ", round(params_RS$se_mean[params_RS$Parameter == "k"], 2))
 
 label_RO <- paste0("Otoliths:\n",
-                   "Linf = ", round(params_RO$mean[params_RO$Parameter == "Linf"]/10, 2), " ± ", round(params_RO$se_mean[params_RO$Parameter == "Linf"]/10, 2), " cm\n",
+                   "L∞ = ", round(params_RO$mean[params_RO$Parameter == "Linf"]/10, 2), " ± ", round(params_RO$se_mean[params_RO$Parameter == "Linf"]/10, 2), " cm\n",
                    "K = ", round(params_RO$mean[params_RO$Parameter == "k"], 2), " ± ", round(params_RO$se_mean[params_RO$Parameter == "k"], 2))
 ```
 
@@ -2301,11 +2306,11 @@ geom_lineribbon(aes( ymin = .lower, ymax = .upper,
 
 ```{r}
 label_BS <- paste0("Scales:\n",
-                   "Linf = ", round(params_BS$mean[params_BS$Parameter == "Linf"]/10, 2), " ± ", round(params_BS$se_mean[params_BS$Parameter == "Linf"]/10, 2), " cm\n",
+                   "L∞ = ", round(params_BS$mean[params_BS$Parameter == "Linf"]/10, 2), " ± ", round(params_BS$se_mean[params_BS$Parameter == "Linf"]/10, 2), " cm\n",
                    "K = ", round(params_BS$mean[params_BS$Parameter == "k"], 2), " ± ", round(params_BS$se_mean[params_BS$Parameter == "k"], 2))
 
 label_BO <- paste0("Otoliths:\n",
-                   "Linf = ", round(params_BO$mean[params_BO$Parameter == "Linf"]/10, 2), " ± ", round(params_BO$se_mean[params_BO$Parameter == "Linf"]/10, 2), " cm\n",
+                   "L∞ = ", round(params_BO$mean[params_BO$Parameter == "Linf"]/10, 2), " ± ", round(params_BO$se_mean[params_BO$Parameter == "Linf"]/10, 2), " cm\n",
                    "K = ", round(params_BO$mean[params_BO$Parameter == "k"], 2), " ± ", round(params_BO$se_mean[params_BO$Parameter == "k"], 2))
 ```
 

@@ -284,10 +284,10 @@ m2 <- lmer(Linf_z ~ method + (1|Species), data = data, REML = F)
 # K trannsformed included as fixed effect
 m3 <- lmer(Loo ~ method + K_z + (1|Species), data = data, REML = F)
 # K trannsformed included as random effect
-m4 <- lmer(Loo ~ method + (1|Species) + (1|K_z), data = data, REML = F)
+m4 <- lmer(Loo ~ method + (1|Species) + (1|K), data = data, REML = F)
 
 anova(m1, m3)
-anova(m2, m4)
+anova(m3, m4)
 
 ```
 
@@ -469,7 +469,7 @@ m4 <- lmer(K_trans ~ method + (1|Loo), data = data, REML = F)
 
 ```{r}
 # Summarise neatly in a table
-tab_model(m4,
+tab_model(m3,
           show.zeroinf = F,
            string.pred = "Coefficient",
              string.ci = "Conf. Int (95%)",
