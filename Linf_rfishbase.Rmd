@@ -286,7 +286,7 @@ m3 <- lmer(Loo ~ method + K_z + (1|Species), data = data, REML = F)
 # K trannsformed included as random effect
 m4 <- lmer(Loo ~ method + (1|Species) + (1|K), data = data, REML = F)
 
-anova(m1, m3)
+anova(m1, m2)
 anova(m3, m4)
 
 ```
@@ -469,7 +469,7 @@ m4 <- lmer(K_trans ~ method + (1|Loo), data = data, REML = F)
 
 ```{r}
 # Summarise neatly in a table
-tab_model(m3,
+tab_model(m4,
           show.zeroinf = F,
            string.pred = "Coefficient",
              string.ci = "Conf. Int (95%)",
@@ -552,5 +552,27 @@ grid.draw(final_plot)
 dev.off()
 ```
 
+
+
+
+```{r}
+library(nlme)
+
+# Sample data with coordinates (x, y)
+data <- data.frame(
+  x = runif(100),
+  y = runif(100),
+  value = rnorm(100)
+)
+
+# Define the spatial correlation structure
+cor_exp <- corSpatial(form = ~x + y, type = "exponential")
+
+# Fit the linear mixed-effects model
+model <- lme(value ~ 1, random = ~1|group, correlation = cor_exp, data = data, method = "ML")
+
+# Print the summary of the model
+summary(model)
+```
 
 
