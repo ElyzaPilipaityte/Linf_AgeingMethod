@@ -1,138 +1,138 @@
 Species,method,TLinfinity,K,Auxim,Sex,Type,Loo,sppLinfmean,Linf_stand,year,Locality,x,y
-Anoplopoma fimbria,scales,96,0.19,unchecked,female,TL,96,78.98333333,0.177256944,1954,"USA, Oregon",,
-Anoplopoma fimbria,scales,78,0.23,unchecked,male,TL,78,78.98333333,-0.012606838,1954,"USA, Oregon",,
-Anoplopoma fimbria,otoliths,54.7,0.472,unchecked,male,TL,54.7,78.98333333,-0.443936624,1993,"USA, West coast",,
-Anoplopoma fimbria,otoliths,69.5,0.19,unchecked,female,TL,69.5,78.98333333,-0.136450839,1982,Vancouver I. (west coast),,
-Anoplopoma fimbria,otoliths,80.8,0.16,unchecked,female,TL,80.8,78.98333333,0.022483498,1982,Queen Charlotte Is. (west coast),,
-Anoplopoma fimbria,otoliths,81.6,0.16,unchecked,female,TL,81.6,78.98333333,0.032066993,1982,Queen Charlotte Sound (east coast inlets),,
-Anoplopoma fimbria,otoliths,81.7,0.14,unchecked,female,TL,81.7,78.98333333,0.033251734,1982,Vancouver I. (west coast),,
-Anoplopoma fimbria,otoliths,64.6,0.26,unchecked,male,TL,64.6,78.98333333,-0.222652219,1982,Queen Charlotte Sound (east coast inlets),,
-Anoplopoma fimbria,otoliths,65.7,0.29,unchecked,male,TL,65.7,78.98333333,-0.202181634,1982,Vancouver I. (west coast),,
-Anoplopoma fimbria,scales,109.7,0.11,unchecked,female,FL,109.7,78.98333333,0.280006077,1970,Bering Sea,,
-Anoplopoma fimbria,scales,79.3,0.2,unchecked,male,FL,79.3,78.98333333,0.003993274,1970,Bering Sea,,
-Anoplopoma fimbria,scales,83.5,0.16,unchecked,mixed,FL,83.5,78.98333333,0.054091816,1976,West coast of USA and Canada,,
-Anoplopoma fimbria,scales,86.99,0.16,unchecked,mixed,FL,84.9,78.98333333,0.069689831,1976,Bering Sea,,
-Anoplopoma fimbria,scales,102.8,0.13,unchecked,mixed,TL,102.8,78.98333333,0.231679637,1976,Bering Sea,,
-Anoplopoma fimbria,otoliths,77.46,0.208,unchecked,female,FL,75.6,78.98333333,-0.044753086,2007,"Alaska, Aleutian Islands",,
-Anoplopoma fimbria,otoliths,82.18,0.222,unchecked,female,FL,80.2,78.98333333,0.015170407,2007,"Alaska, Aleutian Islands",,
-Anoplopoma fimbria,otoliths,66.91,0.227,unchecked,male,FL,65.3,78.98333333,-0.209545687,2007,"Alaska, Aleutian Islands",,
-Anoplopoma fimbria,otoliths,69.47,0.29,unchecked,male,FL,67.8,78.98333333,-0.164945919,2007,"Alaska, Aleutian Islands",,
-Clupea harengus,otoliths,21,0.38,within ellipse,unsexed,TL,21,32.97419355,-0.570199693,1990,"Finland, Bothnian Bay (Baltic Sea)",,
-Clupea harengus,otoliths,30.8,0.332,within ellipse,unsexed,TL,30.8,32.97419355,-0.0705907,1986,"Germany, Western Baltic, around Rügen",,
-Clupea harengus,otoliths,28.3,0.41,unchecked,unsexed,TL,28.3,32.97419355,-0.16516585,1902,"Germany, Western Baltic",,
-Clupea harengus,otoliths,30.1,0.59,unchecked,unsexed,TL,30.1,32.97419355,-0.095488158,2005,"UK, North Sea",,
-Clupea harengus,otoliths,30.5,0.44,unchecked,unsexed,TL,30.5,32.97419355,-0.0811211,2005,"UK, North Sea",,
-Clupea harengus,otoliths,30.9,0.41,unchecked,unsexed,TL,30.9,32.97419355,-0.067126005,2005,"UK, North Sea",,
-Clupea harengus,otoliths,31.5,0.4,unchecked,unsexed,TL,31.5,32.97419355,-0.046799795,2005,"UK, North Sea",,
-Clupea harengus,otoliths,31.9,0.36,unchecked,unsexed,TL,31.9,32.97419355,-0.033673779,2005,"UK, North Sea",,
-Clupea harengus,otoliths,32.1,0.41,unchecked,unsexed,TL,32.1,32.97419355,-0.027233444,2005,"UK, North Sea",,
-Clupea harengus,otoliths,32.2,0.47,unchecked,unsexed,TL,32.2,32.97419355,-0.024043278,2005,"UK, North Sea",,
-Clupea harengus,otoliths,32.4,0.38,unchecked,unsexed,TL,32.4,32.97419355,-0.017722023,2005,"UK, North Sea",,
-Clupea harengus,otoliths,32.4,0.4,within ellipse,unsexed,TL,32.4,32.97419355,-0.017722023,2005,"UK, North Sea",,
-Clupea harengus,otoliths,32.6,0.26,unchecked,unsexed,TL,32.6,32.97419355,-0.01147833,2005,"UK, North Sea",,
-Clupea harengus,otoliths,32.8,0.31,unchecked,unsexed,TL,32.8,32.97419355,-0.005310779,2005,"UK, North Sea",,
-Clupea harengus,otoliths,33.6,0.23,unchecked,unsexed,TL,33.6,32.97419355,0.018625192,2005,"UK, North Sea",,
-Clupea harengus,otoliths,33.6,0.33,unchecked,unsexed,TL,33.6,32.97419355,0.018625192,2005,"UK, North Sea",,
-Clupea harengus,otoliths,33.7,0.37,unchecked,unsexed,TL,33.7,32.97419355,0.021537283,2005,"UK, North Sea",,
-Clupea harengus,otoliths,33.7,0.38,unchecked,unsexed,TL,33.7,32.97419355,0.021537283,2005,"UK, North Sea",,
-Clupea harengus,otoliths,33.8,0.39,unchecked,unsexed,TL,33.8,32.97419355,0.024432144,2005,"UK, North Sea",,
-Clupea harengus,scales,31.2,0.44,within ellipse,unsexed,TL,31.2,32.97419355,-0.056865178,1978,"Ireland, Dunmore stock",,
-Clupea harengus,scales,29.6,0.35,within ellipse,unsexed,TL,29.6,32.97419355,-0.113993025,1978,"UK, Manx stock",,
-Clupea harengus,scales,30.6,0.32,within ellipse,unsexed,TL,30.6,32.97419355,-0.077588024,1978,"UK, Manx stock",,
-Clupea harengus,scales,35.7,0.34,unchecked,unsexed,TL,35.7,32.97419355,0.076353122,2004,"Norway, west coast",,
-Clupea harengus,scales,36.4,0.31,unchecked,unsexed,TL,36.4,32.97419355,0.094115562,2004,"Norway, west coast",,
-Clupea harengus,scales,36.7,0.275,unchecked,unsexed,TL,36.7,32.97419355,0.101520612,2004,"Norway, west coast",,
-Clupea harengus,scales,37.1,0.255,unchecked,unsexed,TL,37.1,32.97419355,0.111207721,2004,"Norway, west coast",,
-Clupea harengus,scales,37.3,0.23,unchecked,unsexed,TL,37.3,32.97419355,0.115973363,2004,"Norway, west coast",,
-Clupea harengus,scales,37.5,0.205,unchecked,unsexed,TL,37.5,32.97419355,0.120688172,2004,"Norway, west coast",,
-Clupea harengus,scales,38,0.185,unchecked,unsexed,TL,38,32.97419355,0.132258065,2004,"Norway, west coast",,
-Clupea harengus,otoliths,36.2,0.3,unchecked,unsexed,TL,36.2,32.97419355,0.089110675,1969,"Iceland, Icelandic summer-spawning herring (Division Va)",,
-Clupea harengus,otoliths,38,0.25,unchecked,unsexed,TL,38,32.97419355,0.132258065,1969,"Iceland, Icelandic summer-spawning herring (Division Va)",,
-Coregonus clupeaformis,scales,58,0.361,unchecked,unsexed,FL,51.8,57.86322917,-0.117050756,1983,"Canada, Lake Huron",,
-Coregonus clupeaformis,scales,66.5,0.262,unchecked,unsexed,FL,59.4,57.86322917,0.025871563,1983,"Canada, Lake Huron",,
-Coregonus clupeaformis,scales,68.544,0.253,unchecked,unsexed,FL,61.2,57.86322917,0.054522399,1983,"Canada, Lake Huron",,
-Coregonus clupeaformis,scales,71.008,0.22,unchecked,unsexed,FL,63.4,57.86322917,0.08733077,1983,"Canada, Lake Huron",,
-Coregonus clupeaformis,scales,44,0.18,unchecked,unsexed,TL,44,57.86322917,-0.31507339,1964,"USA, Cliff Lake, Northwestern Maine",,
-Coregonus clupeaformis,scales,50.5,0.09,unchecked,unsexed,TL,50.5,57.86322917,-0.145806518,1960,"USA, Munising Bay, Lake Superior",,
-Coregonus clupeaformis,otoliths,NA,0.202,unchecked,mixed,FL,46.7,57.86322917,-0.23904131,2015,"Canada, Great Slave Lake: deep water area V",,
-Coregonus clupeaformis,otoliths,NA,0.161,unchecked,mixed,FL,49.2,57.86322917,-0.176081894,2015,"Canada, Great Slave Lake: deep water area III",,
-Coregonus clupeaformis,otoliths,NA,0.184,unchecked,mixed,FL,49.3,57.86322917,-0.173696332,2015,"Canada, Great Slave Lake: deep water area IE",,
-Coregonus clupeaformis,otoliths,NA,0.139,unchecked,mixed,FL,49.6,57.86322917,-0.166597362,2015,"Canada, Great Slave Lake: deep water area IV",,
-Coregonus clupeaformis,otoliths,NA,0.143,unchecked,mixed,FL,51.5,57.86322917,-0.123557848,2015,"Canada, Great Slave Lake: deep water area II",,
-Coregonus clupeaformis,otoliths,NA,0.171,unchecked,mixed,FL,51.5,57.86322917,-0.123557848,2015,"Canada, Great Slave Lake: deep water area IW",,
-Coregonus clupeaformis,otoliths,63,0.5,unchecked,mixed,TL,63,57.86322917,0.081536045,2007,"Canada, Lake Erie: West Central Basin",,
-Coregonus clupeaformis,otoliths,46.91,0.49,unchecked,unsexed,TL,46.91,57.86322917,-0.233494546,2007,"Canada, Lake Erie",,
-Coregonus clupeaformis,otoliths,46.91,1.09,unchecked,unsexed,TL,46.91,57.86322917,-0.233494546,2007,"USA, Lake Michigan, Michigan",,
-Coregonus clupeaformis,otoliths,49.41,0.61,unchecked,unsexed,TL,49.41,57.86322917,-0.171083367,2007,"Canada, Lake Erie",,
-Coregonus clupeaformis,otoliths,49.61,0.93,unchecked,unsexed,TL,49.61,57.86322917,-0.166362209,2007,"USA, Lake Michigan, Michigan",,
-Coregonus clupeaformis,otoliths,50.81,0.26,unchecked,unsexed,TL,50.81,57.86322917,-0.138815768,2007,"USA, Lake Superior, Michigan",,
-Coregonus clupeaformis,otoliths,51.41,0.24,unchecked,unsexed,TL,51.41,57.86322917,-0.125524784,2007,"USA, Lake Michigan, Michigan",,
-Coregonus clupeaformis,otoliths,51.41,0.25,unchecked,unsexed,TL,51.41,57.86322917,-0.125524784,2007,"USA, Lake Michigan, Michigan",,
-Coregonus clupeaformis,otoliths,52.51,0.74,unchecked,unsexed,TL,52.51,57.86322917,-0.101946851,2007,"USA, Lake Michigan, Michigan",,
-Coregonus clupeaformis,otoliths,53.31,0.2,unchecked,unsexed,TL,53.31,57.86322917,-0.085410414,2007,"USA, Lake Michigan, Michigan",,
-Coregonus clupeaformis,otoliths,53.51,0.26,unchecked,unsexed,TL,53.51,57.86322917,-0.081353563,2007,"Canada, Lake Erie",,
-Coregonus clupeaformis,otoliths,54.11,0.27,unchecked,unsexed,TL,54.11,57.86322917,-0.069362949,2007,"USA, Lake Superior, Michigan",,
-Coregonus clupeaformis,otoliths,54.71,0.49,unchecked,unsexed,TL,54.71,57.86322917,-0.057635335,2007,"Canada, Lake Erie",,
-Coregonus clupeaformis,otoliths,54.71,1.03,unchecked,unsexed,TL,54.71,57.86322917,-0.057635335,2007,"Canada, Lake Erie",,
-Coregonus clupeaformis,otoliths,55.21,0.85,unchecked,unsexed,TL,55.21,57.86322917,-0.04805704,2007,"Canada, Lake Erie",,
-Coregonus clupeaformis,otoliths,56.01,1.26,unchecked,unsexed,TL,56.01,57.86322917,-0.033087469,2007,"Canada, Lake Erie",,
-Coregonus clupeaformis,otoliths,56.31,0.62,unchecked,unsexed,TL,56.31,57.86322917,-0.027583541,2007,"USA, Lake Superior, Michigan",,
-Coregonus clupeaformis,otoliths,56.51,0.16,unchecked,unsexed,TL,56.51,57.86322917,-0.02394672,2007,"USA, Lake Michigan, Michigan",,
-Coregonus clupeaformis,otoliths,56.51,0.32,unchecked,unsexed,TL,56.51,57.86322917,-0.02394672,2007,"USA, Lake Michigan, Michigan",,
-Coregonus clupeaformis,otoliths,58.81,0.5,unchecked,unsexed,TL,58.81,57.86322917,0.016098807,2007,"Canada, Lake Erie",,
-Coregonus clupeaformis,otoliths,59.71,0.81,unchecked,unsexed,TL,59.71,57.86322917,0.030929004,2007,"USA, Lake Superior, Wisconsin",,
-Coregonus clupeaformis,otoliths,60.01,0.3,unchecked,unsexed,TL,60.01,57.86322917,0.035773552,2007,"Canada, Lake Erie",,
-Coregonus clupeaformis,otoliths,60.71,0.25,unchecked,unsexed,TL,60.71,57.86322917,0.0468913,2007,"Canada, Lake Erie",,
-Coregonus clupeaformis,otoliths,60.71,0.76,unchecked,unsexed,TL,60.71,57.86322917,0.0468913,2007,"Canada, Lake Erie",,
-Coregonus clupeaformis,otoliths,63.01,0.2,unchecked,unsexed,TL,63.01,57.86322917,0.08168181,2007,"USA, Lake Superior, Michigan",,
-Coregonus clupeaformis,otoliths,63.01,0.68,unchecked,unsexed,TL,63.01,57.86322917,0.08168181,2007,"Canada, Lake Erie",,
-Coregonus clupeaformis,otoliths,63.71,0.12,unchecked,unsexed,TL,63.71,57.86322917,0.091771634,2007,"USA, Lake Michigan, Michigan",,
-Coregonus clupeaformis,otoliths,67.31,0.08,unchecked,unsexed,TL,67.31,57.86322917,0.140347212,2007,"USA, Lake Michigan, Michigan",,
-Coregonus clupeaformis,otoliths,72.01,0.06,unchecked,unsexed,TL,72.01,57.86322917,0.196455643,2007,"Canada, Lake Superior, Ontario",,
-Coregonus clupeaformis,otoliths,72.01,0.1,unchecked,unsexed,TL,72.01,57.86322917,0.196455643,2007,"Canada, Lake Superior, Ontario",,
-Coregonus clupeaformis,otoliths,76.01,0.05,unchecked,unsexed,TL,76.01,57.86322917,0.238741887,2007,"Canada, Lake Superior, Ontario",,
-Coregonus clupeaformis,otoliths,76.01,0.13,unchecked,unsexed,TL,76.01,57.86322917,0.238741887,2007,"Canada, Lake Superior, Ontario",,
-Coregonus clupeaformis,otoliths,78.01,0.05,unchecked,unsexed,TL,78.01,57.86322917,0.258258824,2007,"Canada, Lake Superior, Ontario",,
-Coregonus clupeaformis,otoliths,79.01,0.08,unchecked,unsexed,TL,79.01,57.86322917,0.267646764,2007,"Canada, Lake Superior, Ontario",,
-Coregonus clupeaformis,otoliths,79.01,0.1,unchecked,unsexed,TL,79.01,57.86322917,0.267646764,2007,"Canada, Lake Superior, Ontario",,
-Coregonus clupeaformis,otoliths,NA,0.1198,unchecked,mixed,FL,47.395,57.86322917,-0.220872015,2017,"Canada, Great Slave Lake, Northwest Territories",,
-Cyprinus carpio,scales,81.97,0.122,unchecked,mixed,TL,81.97,68.6585,0.162394779,2003,"Croatia, Vransko Lake",,
-Cyprinus carpio,scales,82,0.122,unchecked,unsexed,TL,82,68.6585,0.16270122,2003,"Croatia, Vransko Lake",,
-Cyprinus carpio,otoliths,NA,0.38,unchecked,female,FL,53.8,68.6585,-0.276180297,2004,"Australia, Campaspe Channels, Victoria",,
-Cyprinus carpio,otoliths,NA,0.18,unchecked,female,FL,59.4,68.6585,-0.155867003,2005,"Australia, Barmah Forest, Victoria",,
-Cyprinus carpio,scales,NA,0.3,unchecked,female,FL,61.5,68.6585,-0.116398374,1995,"Slovakia, Danube",,
-Cyprinus carpio,otoliths,NA,0.35,unchecked,female,FL,63.9,68.6585,-0.074467919,1999,"Australia, lower Murray River, South Australia",,
-Cyprinus carpio,otoliths,NA,0.35,unchecked,female,FL,66.2,68.6585,-0.037137462,2011,"South Africa, Lake Gariep, (30°38'S; 25°46'E), Orange River",,
-Cyprinus carpio,scales,NA,0.75,unchecked,female,FL,75.5,68.6585,0.090615894,2011,"Kenya, Lake Naivasha",,
-Cyprinus carpio,scales,NA,0.15,unchecked,female,FL,76.7,68.6585,0.104843546,2000,"Turkey, Golhisar Lake",,
-Cyprinus carpio,otoliths,NA,0.25,unchecked,male,FL,48.9,68.6585,-0.404059305,2005,"Australia, Barmah Forest, Victoria",,
-Cyprinus carpio,otoliths,NA,0.48,unchecked,male,FL,49.5,68.6585,-0.387040404,2004,"Australia, Campaspe, Victoria",,
-Cyprinus carpio,otoliths,NA,0.35,unchecked,male,FL,60,68.6585,-0.144308333,1999,"Australia, lower Murray River, South Australia",,
-Cyprinus carpio,scales,NA,0.68,unchecked,male,FL,61.8,68.6585,-0.110978964,2011,"Kenya, Lake Naivasha",,
-Cyprinus carpio,otoliths,NA,0.56,unchecked,male,FL,61.9,68.6585,-0.109184168,1985,"South Africa, Hartbeespoort Dam",,
-Cyprinus carpio,scales,NA,0.14,unchecked,male,FL,69.4,68.6585,0.010684438,1995,"Slovakia, Danube",,
-Cyprinus carpio,scales,NA,0.17,unchecked,male,FL,72.8,68.6585,0.056888736,2000,"Turkey, Golhisar Lake",,
-Cyprinus carpio,scales,NA,0.21,unchecked,mixed,FL,67.5,68.6585,-0.017162963,2006,"New Zealand, Waikato region",,
-Cyprinus carpio,scales,NA,0.16,unchecked,mixed,FL,90.5,68.6585,0.241342541,1989,"Hungary, Lake Tisza",,
-Cyprinus carpio,scales,NA,0.17,unchecked,mixed,FL,93,68.6585,0.261736559,1986,"China, Dong Jiang River",,
-Cyprinus carpio,scales,NA,0.13,unchecked,mixed,SL,76.9,68.6585,0.107171651,1957,"Russia, Amur River",,
-Diplodus annularis,scales,26.7,0.56,unchecked,unsexed,TL,17.1,20.62769231,-0.206297796,1978,"France, Gulf of Lion",,
-Diplodus annularis,otoliths,20.4,0.544,unchecked,unsexed,TL,20.4,20.62769231,-0.011161388,1997,"Spain, Catalan coast",,
-Diplodus annularis,otoliths,25,0.243,unchecked,female,TL,25,20.62769231,0.174892308,2001,"Canary Is., off Gran Canaria",,
-Diplodus annularis,otoliths,24.6,0.271,unchecked,male,TL,24.6,20.62769231,0.161475922,2001,"Canary Is., off Gran Canaria",,
-Diplodus annularis,otoliths,18.6447,0.21,unchecked,female,FL,17.2,20.62769231,-0.199284436,2002,"Turkey, Edremit Gulf",,
-Diplodus annularis,scales,22.6,0.173,unchecked,mixed,TL,22.6,20.62769231,0.087270252,2004,"Croatia, Eastern Adriatic Sea",,
-Diplodus annularis,scales,22.6,0.16,unchecked,mixed,TL,22.6,20.62769231,0.087270252,2001,"Tunisia, Gabes Gulf",,
-Diplodus annularis,scales,22.13,0.126,unchecked,female,TL,22.13,20.62769231,0.067885571,2007,"Croatia,	eastern middle Adriatic",,
-Diplodus annularis,scales,21.94,0.125,unchecked,male,TL,21.94,20.62769231,0.059813477,2007,"Croatia, eastern middle Adriatic",,
-Diplodus annularis,scales,23.95,0.126,unchecked,unsexed,TL,23.95,20.62769231,0.138718484,2007,"Croatia, eastern middle Adriatic",,
-Diplodus annularis,scales,NA,0.46,unchecked,unsexed,NA,19.54,20.62769231,-0.055664908,2007,"Algeria, Gulf d' Annaba",,
-Diplodus annularis,otoliths,15.9,0.45,unchecked,female,TL,15.9,20.62769231,-0.297339139,2010,"Spain, Mallorca",,
-Diplodus annularis,otoliths,15.2,0.47,unchecked,male,TL,15.2,20.62769231,-0.35708502,2010,"Spain, Mallorca",,
-Pagellus erythrinus,otoliths,38.35294,0.15,unchecked,mixed,FL,32.6,34.354375,-0.053815184,1993,"Greece, Central Aegean Sea",,
-Pagellus erythrinus,otoliths,50.58823,0.118,unchecked,mixed,FL,43,34.354375,0.201061047,1989,"Greece, Evvoikos Gulf",,
-Pagellus erythrinus,scales,47.29412,0.255,unchecked,mixed,FL,46.5,34.354375,0.261196237,1981,"France, Gulf of Lion",,
-Pagellus erythrinus,scales,28.5224,0.317,unchecked,unsexed,TL,24.2,34.354375,-0.419602273,2002,"Greece, Crete",,
+Anoplopoma fimbria,scales,96,0.19,unchecked,female,TL,96,78.98333333,0.177256944,1954,"USA, Oregon",-121.99219,42.45487
+Anoplopoma fimbria,scales,78,0.23,unchecked,male,TL,78,78.98333333,-0.012606838,1954,"USA, Oregon",-121.99219,42.45487
+Anoplopoma fimbria,otoliths,54.7,0.472,unchecked,male,TL,54.7,78.98333333,-0.443936624,1993,"USA, West coast",-125.33203,40.9799
+Anoplopoma fimbria,otoliths,69.5,0.19,unchecked,female,TL,69.5,78.98333333,-0.136450839,1982,Vancouver I. (west coast),-123.55225,49.1817
+Anoplopoma fimbria,otoliths,80.8,0.16,unchecked,female,TL,80.8,78.98333333,0.022483498,1982,Queen Charlotte Is. (west coast),-132.84668,53.11381
+Anoplopoma fimbria,otoliths,81.6,0.16,unchecked,female,TL,81.6,78.98333333,0.032066993,1982,Queen Charlotte Sound (east coast inlets),-128.27637,51.6998
+Anoplopoma fimbria,otoliths,81.7,0.14,unchecked,female,TL,81.7,78.98333333,0.033251734,1982,Vancouver I. (west coast),-123.55225,49.1817
+Anoplopoma fimbria,otoliths,64.6,0.26,unchecked,male,TL,64.6,78.98333333,-0.222652219,1982,Queen Charlotte Sound (east coast inlets),-128.27637,51.6998
+Anoplopoma fimbria,otoliths,65.7,0.29,unchecked,male,TL,65.7,78.98333333,-0.202181634,1982,Vancouver I. (west coast),-123.55225,49.1817
+Anoplopoma fimbria,scales,109.7,0.11,unchecked,female,FL,109.7,78.98333333,0.280006077,1970,Bering Sea,-170.2002,61.48076
+Anoplopoma fimbria,scales,79.3,0.2,unchecked,male,FL,79.3,78.98333333,0.003993274,1970,Bering Sea,-170.2002,61.48076
+Anoplopoma fimbria,scales,83.5,0.16,unchecked,mixed,FL,83.5,78.98333333,0.054091816,1976,West coast of USA and Canada,-128.84766,48.45835
+Anoplopoma fimbria,scales,86.99,0.16,unchecked,mixed,FL,84.9,78.98333333,0.069689831,1976,Bering Sea,-170.2002,61.48076
+Anoplopoma fimbria,scales,102.8,0.13,unchecked,mixed,TL,102.8,78.98333333,0.231679637,1976,Bering Sea,-170.2002,61.48076
+Anoplopoma fimbria,otoliths,77.46,0.208,unchecked,female,FL,75.6,78.98333333,-0.044753086,2007,"Alaska, Aleutian Islands",-163.73474,54.54021
+Anoplopoma fimbria,otoliths,82.18,0.222,unchecked,female,FL,80.2,78.98333333,0.015170407,2007,"Alaska, Aleutian Islands",-163.73474,54.54021
+Anoplopoma fimbria,otoliths,66.91,0.227,unchecked,male,FL,65.3,78.98333333,-0.209545687,2007,"Alaska, Aleutian Islands",-163.73474,54.54021
+Anoplopoma fimbria,otoliths,69.47,0.29,unchecked,male,FL,67.8,78.98333333,-0.164945919,2007,"Alaska, Aleutian Islands",-163.73474,54.54021
+Clupea harengus,otoliths,21,0.38,within ellipse,unsexed,TL,21,32.97419355,-0.570199693,1990,"Finland, Bothnian Bay (Baltic Sea)",23.22264,64.81411
+Clupea harengus,otoliths,30.8,0.332,within ellipse,unsexed,TL,30.8,32.97419355,-0.0705907,1986,"Germany, Western Baltic, around Rügen",13.7384,54.4381
+Clupea harengus,otoliths,28.3,0.41,unchecked,unsexed,TL,28.3,32.97419355,-0.16516585,1902,"Germany, Western Baltic",13.24951,54.99022
+Clupea harengus,otoliths,30.1,0.59,unchecked,unsexed,TL,30.1,32.97419355,-0.095488158,2005,"UK, North Sea",0.79102,54.64841
+Clupea harengus,otoliths,30.5,0.44,unchecked,unsexed,TL,30.5,32.97419355,-0.0811211,2005,"UK, North Sea",0.79102,54.64841
+Clupea harengus,otoliths,30.9,0.41,unchecked,unsexed,TL,30.9,32.97419355,-0.067126005,2005,"UK, North Sea",0.79102,54.64841
+Clupea harengus,otoliths,31.5,0.4,unchecked,unsexed,TL,31.5,32.97419355,-0.046799795,2005,"UK, North Sea",0.79102,54.64841
+Clupea harengus,otoliths,31.9,0.36,unchecked,unsexed,TL,31.9,32.97419355,-0.033673779,2005,"UK, North Sea",0.79102,54.64841
+Clupea harengus,otoliths,32.1,0.41,unchecked,unsexed,TL,32.1,32.97419355,-0.027233444,2005,"UK, North Sea",0.79102,54.64841
+Clupea harengus,otoliths,32.2,0.47,unchecked,unsexed,TL,32.2,32.97419355,-0.024043278,2005,"UK, North Sea",0.79102,54.64841
+Clupea harengus,otoliths,32.4,0.38,unchecked,unsexed,TL,32.4,32.97419355,-0.017722023,2005,"UK, North Sea",0.79102,54.64841
+Clupea harengus,otoliths,32.4,0.4,within ellipse,unsexed,TL,32.4,32.97419355,-0.017722023,2005,"UK, North Sea",0.79102,54.64841
+Clupea harengus,otoliths,32.6,0.26,unchecked,unsexed,TL,32.6,32.97419355,-0.01147833,2005,"UK, North Sea",0.79102,54.64841
+Clupea harengus,otoliths,32.8,0.31,unchecked,unsexed,TL,32.8,32.97419355,-0.005310779,2005,"UK, North Sea",0.79102,54.64841
+Clupea harengus,otoliths,33.6,0.23,unchecked,unsexed,TL,33.6,32.97419355,0.018625192,2005,"UK, North Sea",0.79102,54.64841
+Clupea harengus,otoliths,33.6,0.33,unchecked,unsexed,TL,33.6,32.97419355,0.018625192,2005,"UK, North Sea",0.79102,54.64841
+Clupea harengus,otoliths,33.7,0.37,unchecked,unsexed,TL,33.7,32.97419355,0.021537283,2005,"UK, North Sea",0.79102,54.64841
+Clupea harengus,otoliths,33.7,0.38,unchecked,unsexed,TL,33.7,32.97419355,0.021537283,2005,"UK, North Sea",0.79102,54.64841
+Clupea harengus,otoliths,33.8,0.39,unchecked,unsexed,TL,33.8,32.97419355,0.024432144,2005,"UK, North Sea",0.79102,54.64841
+Clupea harengus,scales,31.2,0.44,within ellipse,unsexed,TL,31.2,32.97419355,-0.056865178,1978,"Ireland, Dunmore stock",-6.9849,52.15224
+Clupea harengus,scales,29.6,0.35,within ellipse,unsexed,TL,29.6,32.97419355,-0.113993025,1978,"UK, Manx stock",-4.61151,54.76426
+Clupea harengus,scales,30.6,0.32,within ellipse,unsexed,TL,30.6,32.97419355,-0.077588024,1978,"UK, Manx stock",-4.61151,54.76426
+Clupea harengus,scales,35.7,0.34,unchecked,unsexed,TL,35.7,32.97419355,0.076353122,2004,"Norway, west coast",10.08545,64.67092
+Clupea harengus,scales,36.4,0.31,unchecked,unsexed,TL,36.4,32.97419355,0.094115562,2004,"Norway, west coast",10.08545,64.67092
+Clupea harengus,scales,36.7,0.275,unchecked,unsexed,TL,36.7,32.97419355,0.101520612,2004,"Norway, west coast",10.08545,64.67092
+Clupea harengus,scales,37.1,0.255,unchecked,unsexed,TL,37.1,32.97419355,0.111207721,2004,"Norway, west coast",10.08545,64.67092
+Clupea harengus,scales,37.3,0.23,unchecked,unsexed,TL,37.3,32.97419355,0.115973363,2004,"Norway, west coast",10.08545,64.67092
+Clupea harengus,scales,37.5,0.205,unchecked,unsexed,TL,37.5,32.97419355,0.120688172,2004,"Norway, west coast",10.08545,64.67092
+Clupea harengus,scales,38,0.185,unchecked,unsexed,TL,38,32.97419355,0.132258065,2004,"Norway, west coast",10.08545,64.67092
+Clupea harengus,otoliths,36.2,0.3,unchecked,unsexed,TL,36.2,32.97419355,0.089110675,1969,"Iceland, Icelandic summer-spawning herring (Division Va)",-15.68848,64.03374
+Clupea harengus,otoliths,38,0.25,unchecked,unsexed,TL,38,32.97419355,0.132258065,1969,"Iceland, Icelandic summer-spawning herring (Division Va)",-15.68848,64.03374
+Coregonus clupeaformis,scales,58,0.361,unchecked,unsexed,FL,51.8,57.86322917,-0.117050756,1983,"Canada, Lake Huron",-82.02942,45.1278
+Coregonus clupeaformis,scales,66.5,0.262,unchecked,unsexed,FL,59.4,57.86322917,0.025871563,1983,"Canada, Lake Huron",-82.02942,45.1278
+Coregonus clupeaformis,scales,68.544,0.253,unchecked,unsexed,FL,61.2,57.86322917,0.054522399,1983,"Canada, Lake Huron",-82.02942,45.1278
+Coregonus clupeaformis,scales,71.008,0.22,unchecked,unsexed,FL,63.4,57.86322917,0.08733077,1983,"Canada, Lake Huron",-82.02942,45.1278
+Coregonus clupeaformis,scales,44,0.18,unchecked,unsexed,TL,44,57.86322917,-0.31507339,1964,"USA, Cliff Lake, Northwestern Maine",-69.24957,46.40401
+Coregonus clupeaformis,scales,50.5,0.09,unchecked,unsexed,TL,50.5,57.86322917,-0.145806518,1960,"USA, Munising Bay, Lake Superior",-86.64557,46.42052
+Coregonus clupeaformis,otoliths,NA,0.202,unchecked,mixed,FL,46.7,57.86322917,-0.23904131,2015,"Canada, Great Slave Lake: deep water area V",-113.65593,61.89327
+Coregonus clupeaformis,otoliths,NA,0.161,unchecked,mixed,FL,49.2,57.86322917,-0.176081894,2015,"Canada, Great Slave Lake: deep water area III",-113.65593,61.89327
+Coregonus clupeaformis,otoliths,NA,0.184,unchecked,mixed,FL,49.3,57.86322917,-0.173696332,2015,"Canada, Great Slave Lake: deep water area IE",-113.65593,61.89327
+Coregonus clupeaformis,otoliths,NA,0.139,unchecked,mixed,FL,49.6,57.86322917,-0.166597362,2015,"Canada, Great Slave Lake: deep water area IV",-113.65593,61.89327
+Coregonus clupeaformis,otoliths,NA,0.143,unchecked,mixed,FL,51.5,57.86322917,-0.123557848,2015,"Canada, Great Slave Lake: deep water area II",-113.65593,61.89327
+Coregonus clupeaformis,otoliths,NA,0.171,unchecked,mixed,FL,51.5,57.86322917,-0.123557848,2015,"Canada, Great Slave Lake: deep water area IW",-113.65593,61.89327
+Coregonus clupeaformis,otoliths,63,0.5,unchecked,mixed,TL,63,57.86322917,0.081536045,2007,"Canada, Lake Erie: West Central Basin",-81.26587,42.40723
+Coregonus clupeaformis,otoliths,46.91,0.49,unchecked,unsexed,TL,46.91,57.86322917,-0.233494546,2007,"Canada, Lake Erie",-81.03516,42.50045
+Coregonus clupeaformis,otoliths,46.91,1.09,unchecked,unsexed,TL,46.91,57.86322917,-0.233494546,2007,"USA, Lake Michigan, Michigan",-85.71533,45.27489
+Coregonus clupeaformis,otoliths,49.41,0.61,unchecked,unsexed,TL,49.41,57.86322917,-0.171083367,2007,"Canada, Lake Erie",-81.03516,42.50045
+Coregonus clupeaformis,otoliths,49.61,0.93,unchecked,unsexed,TL,49.61,57.86322917,-0.166362209,2007,"USA, Lake Michigan, Michigan",-85.71533,45.27489
+Coregonus clupeaformis,otoliths,50.81,0.26,unchecked,unsexed,TL,50.81,57.86322917,-0.138815768,2007,"USA, Lake Superior, Michigan",-87.56104,47.10004
+Coregonus clupeaformis,otoliths,51.41,0.24,unchecked,unsexed,TL,51.41,57.86322917,-0.125524784,2007,"USA, Lake Michigan, Michigan",-85.71533,45.27489
+Coregonus clupeaformis,otoliths,51.41,0.25,unchecked,unsexed,TL,51.41,57.86322917,-0.125524784,2007,"USA, Lake Michigan, Michigan",-85.71533,45.27489
+Coregonus clupeaformis,otoliths,52.51,0.74,unchecked,unsexed,TL,52.51,57.86322917,-0.101946851,2007,"USA, Lake Michigan, Michigan",-85.71533,45.27489
+Coregonus clupeaformis,otoliths,53.31,0.2,unchecked,unsexed,TL,53.31,57.86322917,-0.085410414,2007,"USA, Lake Michigan, Michigan",-85.71533,45.27489
+Coregonus clupeaformis,otoliths,53.51,0.26,unchecked,unsexed,TL,53.51,57.86322917,-0.081353563,2007,"Canada, Lake Erie",-81.03516,42.50045
+Coregonus clupeaformis,otoliths,54.11,0.27,unchecked,unsexed,TL,54.11,57.86322917,-0.069362949,2007,"USA, Lake Superior, Michigan",-87.56104,47.10004
+Coregonus clupeaformis,otoliths,54.71,0.49,unchecked,unsexed,TL,54.71,57.86322917,-0.057635335,2007,"Canada, Lake Erie",-81.03516,42.50045
+Coregonus clupeaformis,otoliths,54.71,1.03,unchecked,unsexed,TL,54.71,57.86322917,-0.057635335,2007,"Canada, Lake Erie",-81.03516,42.50045
+Coregonus clupeaformis,otoliths,55.21,0.85,unchecked,unsexed,TL,55.21,57.86322917,-0.04805704,2007,"Canada, Lake Erie",-81.03516,42.50045
+Coregonus clupeaformis,otoliths,56.01,1.26,unchecked,unsexed,TL,56.01,57.86322917,-0.033087469,2007,"Canada, Lake Erie",-81.03516,42.50045
+Coregonus clupeaformis,otoliths,56.31,0.62,unchecked,unsexed,TL,56.31,57.86322917,-0.027583541,2007,"USA, Lake Superior, Michigan",-87.56104,47.10004
+Coregonus clupeaformis,otoliths,56.51,0.16,unchecked,unsexed,TL,56.51,57.86322917,-0.02394672,2007,"USA, Lake Michigan, Michigan",-85.71533,45.27489
+Coregonus clupeaformis,otoliths,56.51,0.32,unchecked,unsexed,TL,56.51,57.86322917,-0.02394672,2007,"USA, Lake Michigan, Michigan",-85.71533,45.27489
+Coregonus clupeaformis,otoliths,58.81,0.5,unchecked,unsexed,TL,58.81,57.86322917,0.016098807,2007,"Canada, Lake Erie",-81.03516,42.50045
+Coregonus clupeaformis,otoliths,59.71,0.81,unchecked,unsexed,TL,59.71,57.86322917,0.030929004,2007,"USA, Lake Superior, Wisconsin",-90.50537,46.99524
+Coregonus clupeaformis,otoliths,60.01,0.3,unchecked,unsexed,TL,60.01,57.86322917,0.035773552,2007,"Canada, Lake Erie",-81.03516,42.50045
+Coregonus clupeaformis,otoliths,60.71,0.25,unchecked,unsexed,TL,60.71,57.86322917,0.0468913,2007,"Canada, Lake Erie",-81.03516,42.50045
+Coregonus clupeaformis,otoliths,60.71,0.76,unchecked,unsexed,TL,60.71,57.86322917,0.0468913,2007,"Canada, Lake Erie",-81.03516,42.50045
+Coregonus clupeaformis,otoliths,63.01,0.2,unchecked,unsexed,TL,63.01,57.86322917,0.08168181,2007,"USA, Lake Superior, Michigan",-87.56104,47.10004
+Coregonus clupeaformis,otoliths,63.01,0.68,unchecked,unsexed,TL,63.01,57.86322917,0.08168181,2007,"Canada, Lake Erie",-81.03516,42.50045
+Coregonus clupeaformis,otoliths,63.71,0.12,unchecked,unsexed,TL,63.71,57.86322917,0.091771634,2007,"USA, Lake Michigan, Michigan",-85.71533,45.27489
+Coregonus clupeaformis,otoliths,67.31,0.08,unchecked,unsexed,TL,67.31,57.86322917,0.140347212,2007,"USA, Lake Michigan, Michigan",-85.71533,45.27489
+Coregonus clupeaformis,otoliths,72.01,0.06,unchecked,unsexed,TL,72.01,57.86322917,0.196455643,2007,"Canada, Lake Superior, Ontario",-85.44067,47.59876
+Coregonus clupeaformis,otoliths,72.01,0.1,unchecked,unsexed,TL,72.01,57.86322917,0.196455643,2007,"Canada, Lake Superior, Ontario",-85.44067,47.59876
+Coregonus clupeaformis,otoliths,76.01,0.05,unchecked,unsexed,TL,76.01,57.86322917,0.238741887,2007,"Canada, Lake Superior, Ontario",-85.44067,47.59876
+Coregonus clupeaformis,otoliths,76.01,0.13,unchecked,unsexed,TL,76.01,57.86322917,0.238741887,2007,"Canada, Lake Superior, Ontario",-85.44067,47.59876
+Coregonus clupeaformis,otoliths,78.01,0.05,unchecked,unsexed,TL,78.01,57.86322917,0.258258824,2007,"Canada, Lake Superior, Ontario",-85.44067,47.59876
+Coregonus clupeaformis,otoliths,79.01,0.08,unchecked,unsexed,TL,79.01,57.86322917,0.267646764,2007,"Canada, Lake Superior, Ontario",-85.44067,47.59876
+Coregonus clupeaformis,otoliths,79.01,0.1,unchecked,unsexed,TL,79.01,57.86322917,0.267646764,2007,"Canada, Lake Superior, Ontario",-85.44067,47.59876
+Coregonus clupeaformis,otoliths,NA,0.1198,unchecked,mixed,FL,47.395,57.86322917,-0.220872015,2017,"Canada, Great Slave Lake, Northwest Territories",-114.67529,62.22956
+Cyprinus carpio,scales,81.97,0.122,unchecked,mixed,TL,81.97,68.6585,0.162394779,2003,"Croatia, Vransko Lake",15.57274,43.89487
+Cyprinus carpio,scales,82,0.122,unchecked,unsexed,TL,82,68.6585,0.16270122,2003,"Croatia, Vransko Lake",15.57274,43.89487
+Cyprinus carpio,otoliths,NA,0.38,unchecked,female,FL,53.8,68.6585,-0.276180297,2004,"Australia, Campaspe Channels, Victoria",144.64675,-36.40395
+Cyprinus carpio,otoliths,NA,0.18,unchecked,female,FL,59.4,68.6585,-0.155867003,2005,"Australia, Barmah Forest, Victoria",144.96117,-35.94685
+Cyprinus carpio,scales,NA,0.3,unchecked,female,FL,61.5,68.6585,-0.116398374,1995,"Slovakia, Danube",17.63014,47.80658
+Cyprinus carpio,otoliths,NA,0.35,unchecked,female,FL,63.9,68.6585,-0.074467919,1999,"Australia, lower Murray River, South Australia",144.94031,-36.07814
+Cyprinus carpio,otoliths,NA,0.35,unchecked,female,FL,66.2,68.6585,-0.037137462,2011,"South Africa, Lake Gariep, (30°38'S; 25°46'E), Orange River",25.4951,-30.62805
+Cyprinus carpio,scales,NA,0.75,unchecked,female,FL,75.5,68.6585,0.090615894,2011,"Kenya, Lake Naivasha",36.35538,-0.75864
+Cyprinus carpio,scales,NA,0.15,unchecked,female,FL,76.7,68.6585,0.104843546,2000,"Turkey, Golhisar Lake",29.59974,37.1157
+Cyprinus carpio,otoliths,NA,0.25,unchecked,male,FL,48.9,68.6585,-0.404059305,2005,"Australia, Barmah Forest, Victoria",144.96117,-35.94685
+Cyprinus carpio,otoliths,NA,0.48,unchecked,male,FL,49.5,68.6585,-0.387040404,2004,"Australia, Campaspe, Victoria",144.51907,-36.76945
+Cyprinus carpio,otoliths,NA,0.35,unchecked,male,FL,60,68.6585,-0.144308333,1999,"Australia, lower Murray River, South Australia",144.94031,-36.07814
+Cyprinus carpio,scales,NA,0.68,unchecked,male,FL,61.8,68.6585,-0.110978964,2011,"Kenya, Lake Naivasha",36.35538,-0.75864
+Cyprinus carpio,otoliths,NA,0.56,unchecked,male,FL,61.9,68.6585,-0.109184168,1985,"South Africa, Hartbeespoort Dam",27.86686,-25.75206
+Cyprinus carpio,scales,NA,0.14,unchecked,male,FL,69.4,68.6585,0.010684438,1995,"Slovakia, Danube",17.63014,47.80658
+Cyprinus carpio,scales,NA,0.17,unchecked,male,FL,72.8,68.6585,0.056888736,2000,"Turkey, Golhisar Lake",29.59974,37.1157
+Cyprinus carpio,scales,NA,0.21,unchecked,mixed,FL,67.5,68.6585,-0.017162963,2006,"New Zealand, Waikato region",173.41475,-34.83154
+Cyprinus carpio,scales,NA,0.16,unchecked,mixed,FL,90.5,68.6585,0.241342541,1989,"Hungary, Lake Tisza",20.62408,47.57375
+Cyprinus carpio,scales,NA,0.17,unchecked,mixed,FL,93,68.6585,0.261736559,1986,"China, Dong Jiang River",114.75459,23.80321
+Cyprinus carpio,scales,NA,0.13,unchecked,mixed,SL,76.9,68.6585,0.107171651,1957,"Russia, Amur River",134.56968,48.3582
+Diplodus annularis,scales,26.7,0.56,unchecked,unsexed,TL,17.1,20.62769231,-0.206297796,1978,"France, Gulf of Lion",4.25298,42.93852
+Diplodus annularis,otoliths,20.4,0.544,unchecked,unsexed,TL,20.4,20.62769231,-0.011161388,1997,"Spain, Catalan coast",1.71387,41.14971
+Diplodus annularis,otoliths,25,0.243,unchecked,female,TL,25,20.62769231,0.174892308,2001,"Canary Is., off Gran Canaria",-15.85876,28.08167
+Diplodus annularis,otoliths,24.6,0.271,unchecked,male,TL,24.6,20.62769231,0.161475922,2001,"Canary Is., off Gran Canaria",-15.85876,28.08167
+Diplodus annularis,otoliths,18.6447,0.21,unchecked,female,FL,17.2,20.62769231,-0.199284436,2002,"Turkey, Edremit Gulf",26.69844,39.46236
+Diplodus annularis,scales,22.6,0.173,unchecked,mixed,TL,22.6,20.62769231,0.087270252,2004,"Croatia, Eastern Adriatic Sea",14.55688,44.33171
+Diplodus annularis,scales,22.6,0.16,unchecked,mixed,TL,22.6,20.62769231,0.087270252,2001,"Tunisia, Gabes Gulf",10.20905,33.96386
+Diplodus annularis,scales,22.13,0.126,unchecked,female,TL,22.13,20.62769231,0.067885571,2007,"Croatia,	eastern middle Adriatic",15.23804,43.68376
+Diplodus annularis,scales,21.94,0.125,unchecked,male,TL,21.94,20.62769231,0.059813477,2007,"Croatia, eastern middle Adriatic",15.23804,43.68376
+Diplodus annularis,scales,23.95,0.126,unchecked,unsexed,TL,23.95,20.62769231,0.138718484,2007,"Croatia, eastern middle Adriatic",15.23804,43.68376
+Diplodus annularis,scales,NA,0.46,unchecked,unsexed,NA,19.54,20.62769231,-0.055664908,2007,"Algeria, Gulf d' Annaba",7.74261,36.98062
+Diplodus annularis,otoliths,15.9,0.45,unchecked,female,TL,15.9,20.62769231,-0.297339139,2010,"Spain, Mallorca",2.66968,39.90131
+Diplodus annularis,otoliths,15.2,0.47,unchecked,male,TL,15.2,20.62769231,-0.35708502,2010,"Spain, Mallorca",2.66968,39.90131
+Pagellus erythrinus,otoliths,38.35294,0.15,unchecked,mixed,FL,32.6,34.354375,-0.053815184,1993,"Greece, Central Aegean Sea",25.11475,38.97649
+Pagellus erythrinus,otoliths,50.58823,0.118,unchecked,mixed,FL,43,34.354375,0.201061047,1989,"Greece, Evvoikos Gulf",24.104,38.16911
+Pagellus erythrinus,scales,47.29412,0.255,unchecked,mixed,FL,46.5,34.354375,0.261196237,1981,"France, Gulf of Lion",4.25298,42.93852
+Pagellus erythrinus,scales,28.5224,0.317,unchecked,unsexed,TL,24.2,34.354375,-0.419602273,2002,"Greece, Crete",24.38965,35.0165
 Pagellus erythrinus,otoliths,27,0.239,unchecked,unsexed,TL,27,34.354375,-0.272384259,2002,"Italy, Tuscan Archipelago",10.299,42.86112
 Pagellus erythrinus,otoliths,30,0.203,unchecked,unsexed,TL,30,34.354375,-0.145145833,1989,Cyprus,33.12103,35.44501
 Pagellus erythrinus,scales,38.1,0.18,unchecked,unsexed,FL,32.6,34.354375,-0.053815184,1988,"Greece,	Ionian Sea (and Patraikos + Korinthiakos Gulf)",20.9729,38.11727
@@ -205,9 +205,9 @@ Salvelinus namaycush,scales,90.41,0.35,unchecked,unsexed,TL,90.41,77.71255814,0.
 Salvelinus namaycush,scales,91.01,0.13,unchecked,unsexed,TL,91.01,77.71255814,0.146109679,2007,"Canada, Lake Superior, Ontario",-85.44067,47.59876
 Salvelinus namaycush,scales,92.01,0.05,unchecked,unsexed,TL,92.01,77.71255814,0.155390087,2007,"Canada, Lake Superior, Ontario",-85.44067,47.59876
 Salvelinus namaycush,scales,96.01,0.01,unchecked,unsexed,TL,96.01,77.71255814,0.190578501,2007,"Canada, Lake Superior, Ontario",-85.44067,47.59876
-Sardina pilchardus,scales,20.3,0.306,within ellipse,unsexed,TL,20.3,19.00666667,0.063711002,1965,"Spain, Vinaroz-Castellon-Columbretes",,
-Sardina pilchardus,scales,19.4,0.43,within ellipse,female,TL,19.4,19.00666667,0.020274914,1981,Tunisia,,
-Sardina pilchardus,scales,19,0.36,within ellipse,male,TL,19,19.00666667,-0.000350877,1981,Tunisia,,
+Sardina pilchardus,scales,20.3,0.306,within ellipse,unsexed,TL,20.3,19.00666667,0.063711002,1965,"Spain, Vinaroz-Castellon-Columbretes",0.54794,40.47202
+Sardina pilchardus,scales,19.4,0.43,within ellipse,female,TL,19.4,19.00666667,0.020274914,1981,Tunisia,10.62378,36.0491
+Sardina pilchardus,scales,19,0.36,within ellipse,male,TL,19,19.00666667,-0.000350877,1981,Tunisia,10.62378,36.0491
 Sardina pilchardus,scales,20.3,0.256,within ellipse,female,TL,20.3,19.00666667,0.063711002,1986,"Algeria, Algerian coasts",3.18741,36.82797
 Sardina pilchardus,scales,18.7,0.282,within ellipse,male,TL,18.7,19.00666667,-0.016399287,1986,"Algeria, Algerian coasts",3.18741,36.82797
 Sardina pilchardus,otoliths,20.5,0.46,within ellipse,unsexed,TL,20.5,19.00666667,0.072845528,1983,"Italy, Central Adriatic Sea",15.24902,42.87596

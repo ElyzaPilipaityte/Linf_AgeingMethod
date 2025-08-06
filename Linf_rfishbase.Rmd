@@ -554,25 +554,107 @@ dev.off()
 
 
 
+# nlme
+
+Trying out models in nlme, incorporating spatial location (x, y) coordinates
+
+```{r}
+data$K_trans <- sqrt(data$K)
+# data$K_trans <- log(data$K)
+
+data$Linf_z <- scale(data$Loo)
+data$K_z <- scale(data$K)
+```
 
 ```{r}
 library(nlme)
 
-# Sample data with coordinates (x, y)
-data <- data.frame(
-  x = runif(100),
-  y = runif(100),
-  value = rnorm(100)
+# Slightly jitter x and y to prevent exact duplicates
+data$x_jittered <- jitter(data$x, factor = 1e-6)
+data$y_jittered <- jitter(data$y, factor = 1e-6)
+
+# Re-define spatial correlation structure with jittered coordinates
+cor_struct <- corExp(form = ~x_jittered + y_jittered, nugget = TRUE)
+
+# Fit the model
+model <- lme(
+  Loo ~ method,
+  random = ~1 | Species,
+  correlation = cor_struct,
+  data = data,
+  method = "REML"
 )
 
-# Define the spatial correlation structure
-cor_exp <- corSpatial(form = ~x + y, type = "exponential")
 
-# Fit the linear mixed-effects model
-model <- lme(value ~ 1, random = ~1|group, correlation = cor_exp, data = data, method = "ML")
+model <- lme(
+  K_trans ~ method,
+  random = ~1 | Linf_z,
+  random = ~1 | year,
+  correlation = cor_struct,
+  data = data,
+  method = "REML"
+)
 
-# Print the summary of the model
+
+# Show summary of the model
 summary(model)
+
+
 ```
 
+```{r}
+# Summarise neatly in a table
+tab_model(model,
+          show.zeroinf = F,
+           string.pred = "Coefficient",
+             string.ci = "Conf. Int (95%)",
+              string.p = "P-value",
+               p.style = c("numeric"),
+                emph.p = FALSE,
+             transform = NULL)
 
+```
+
+```{r}
+library(patchwork)
+
+# 1. Residuals vs Fitted
+resid <- resid(model)
+fitted <- fitted(model)
+res_df <- data.frame(Fitted = fitted, Residuals = resid)
+
+p1 <- ggplot(res_df, aes(x = Fitted, y = Residuals)) +
+  geom_point(alpha = 0.6) +
+  geom_hline(yintercept = 0, color = "red") +
+  labs(title = "Residuals vs Fitted",
+       x = "Fitted values", y = "Residuals") +
+  My_theme
+
+# 2. QQ Plot of Residuals
+p2 <- ggplot(res_df, aes(sample = Residuals)) +
+  stat_qq() +
+  stat_qq_line(color = "red") +
+  labs(title = "QQ Plot of Residuals",
+       x = "Theoretical", y = "Sample")  +
+  My_theme
+
+# 3. QQ Plot of Random Effects
+ranef_vals <- ranef(model)$Species[,1]
+ranef_df <- data.frame(ranef = ranef_vals)
+
+p3 <- ggplot(ranef_df, aes(sample = ranef)) +
+  stat_qq() +
+  stat_qq_line(color = "red") +
+  labs(title = "QQ Plot of Random Effects",
+       x = "Theoretical", y = "Random Intercepts")  +
+  My_theme
+
+# 4. Histogram of Residuals
+p4 <- ggplot(res_df, aes(x = Residuals)) +
+  geom_histogram(bins = 32, fill = "gray70", color = "black") +
+  labs(title = "Histogram of Residuals",
+       x = "Residuals", y = "Count")  +
+  My_theme
+
+final_plot <- gridExtra::grid.arrange(p1, p2, p3, p4, ncol = 2)
+```
