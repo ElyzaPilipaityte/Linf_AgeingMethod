@@ -568,7 +568,10 @@ data$K_z <- scale(data$K)
 
 ```{r}
 library(nlme)
+library(glmmTMB)
 
+data <- data %>% 
+    mutate(method01 = if_else(method == "scales", 1, 0))
 # Slightly jitter x and y to prevent exact duplicates
 data$x_jittered <- jitter(data$x, factor = 1e-6)
 data$y_jittered <- jitter(data$y, factor = 1e-6)
@@ -577,12 +580,9 @@ data$y_jittered <- jitter(data$y, factor = 1e-6)
 cor_struct <- corExp(form = ~x_jittered + y_jittered, nugget = TRUE)
 
 # Fit the model
-model <- lme(
-  Loo ~ method,
-  random = ~1 | Species,
-  correlation = cor_struct,
-  data = data,
-  method = "REML"
+model <- glmmTMB(
+  Loo ~ method + (1|Species),
+  data = data
 )
 
 
@@ -614,6 +614,19 @@ tab_model(model,
              transform = NULL)
 
 ```
+
+```{r}
+library(DHARMa)
+
+simulationOutput <- simulateResiduals(fittedModel = model)
+
+plot(simulationOutput)
+plotResiduals(simulationOutput, form = data$Species)
+
+
+```
+
+
 
 ```{r}
 library(patchwork)
