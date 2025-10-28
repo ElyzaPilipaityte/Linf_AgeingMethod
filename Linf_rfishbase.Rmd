@@ -176,7 +176,7 @@ ggplot(data, aes(x = as.factor(year), y = Loo, color = method)) +
 Plot showing Linf differences between species and methods
 
 ```{r}
-ggplot(data, aes(x = Species, y = Loo, fill = method)) +
+Linf_plot <- ggplot(data, aes(x = Species, y = Loo, fill = method)) +
   # Boxplots: semi-transparent
   geom_boxplot(alpha = 0.4, position = position_dodge(width = 0.75)) +
   # Dots: fully opaque (no alpha)
@@ -192,16 +192,26 @@ ggplot(data, aes(x = Species, y = Loo, fill = method)) +
   ylab(expression(L[infinity]~"(cm)")) +
   theme(
     panel.background = element_rect(fill = "white"), 
-    axis.text = element_text(size = 14), 
-    axis.title = element_text(size = 16), 
+    axis.text = element_text(size = 18), 
+    axis.title = element_text(size = 20), 
     panel.grid.major = element_blank(), 
     panel.grid.minor = element_blank(),
-    axis.text.x = element_text(angle = 55, hjust = 1),
-    legend.text = element_text(size = 14),
-    legend.title = element_text(size = 14)
+    axis.text.x = element_text(angle = 55, hjust = 1, face = "italic"),
+    legend.text = element_text(size = 18),
+    legend.title = element_text(size = 18)
   )
 
 ```
+
+Save this plot 
+
+```{r}
+library(grid)
+tiff("Linf_differences.tiff", width = 300, height = 250, units = "mm", res = 300, compression = "lzw")
+grid.draw(Linf_plot)
+dev.off()
+```
+
 
 Data exploration 
 
