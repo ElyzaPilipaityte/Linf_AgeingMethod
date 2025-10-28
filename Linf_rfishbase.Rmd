@@ -304,6 +304,10 @@ tab_model(m4,
                 emph.p = FALSE,
              transform = NULL)
 
+summary(m4)
+install.packages("lmerTest")
+library(lmer)
+lmerTest::lmer(m4)
 ```
 
 Residuals
@@ -478,6 +482,7 @@ tab_model(m4,
                 emph.p = FALSE,
              transform = NULL)
 
+summary(m4)
 ```
 
 Residuals
